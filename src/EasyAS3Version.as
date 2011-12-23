@@ -15,7 +15,7 @@
 		/**
 		 * 子版本号
 		 */
-		public static const MINOR_VERSION:uint = 42;
+		public static const MINOR_VERSION:uint = 46;
 		
 		/**
 		 * 修正版本号
