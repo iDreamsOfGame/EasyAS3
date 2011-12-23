@@ -1,6 +1,6 @@
 ﻿/**
- * VERSION: 1.855
- * DATE: 2011-06-27
+ * VERSION: 1.895
+ * DATE: 2011-11-27
  * AS3
  * UPDATES AND DOCS AT: http://www.greensock.com/loadermax/
  **/
@@ -143,7 +143,7 @@ function errorHandler(event:LoaderEvent):void {
  */	
 	public class LoaderMax extends LoaderCore {		
 		/** @private **/
-		public static const version:Number = 1.855;
+		public static const version:Number = 1.895;
 		/** The default value that will be used for the <code>estimatedBytes</code> on loaders that don't declare one in the <code>vars</code> parameter of the constructor. **/
 		public static var defaultEstimatedBytes:uint = 20000;
 		/** Controls the default value of <code>auditSize</code> in LoaderMax instances (normally <code>true</code>). For most situations, the auditSize feature is very convenient for ensuring that the overall progress of LoaderMax instances is reported accurately, but when working with very large quantities of files that have no <code>estimatedBytes</code> defined, some developers prefer to turn auditSize off by default. Of course you can always override the default for individual LoaderMax instances by defining an <code>auditSize</code> value in the <code>vars</code> parameter of the constructor. **/
@@ -533,6 +533,21 @@ function completeHandler(event:LoaderEvent):void {
 				}
 			}
 			return a;
+		}
+		
+		/**
+		 * Returns the child that is at a particular position (zero-based index) in the queue. For example, 
+		 * <code>myLoaderMax.getChildAt(0)</code> would get the first loader in the queue. 
+		 * <code>myLoaderMax.getChildAt(2)</code> would get the 3rd loader in the queue. 
+		 * 
+		 * @param index The index of the child in the queue that should be returned. For example, <code>myLoaderMax.getChildAt(0)</code> would get the first loader in the queue. <code>myLoaderMax.getChildAt(2)</code> would get the 3rd loader.
+		 * @return The child loader that is located at the corresponding index 
+		 * @see #getChildren()
+		 * @see #getLoader()
+		 * @see #getChildrenByStatus()
+		 */
+		public function getChildAt(index:int):* {
+			return _loaders[index];
 		}
 		
 		/**

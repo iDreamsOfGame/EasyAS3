@@ -72,6 +72,9 @@ package org.easyas3.components
 			var p:Point;
 			var g:Graphics = maskDisplay.graphics;
 			
+			//显示之前先隐藏遮罩
+			hide();
+			
 			//转换交互对象的全局坐标为图形的本地坐标
 			p = interactiveDisplayObj.parent.localToGlobal(new Point(interactiveDisplayObj.x, interactiveDisplayObj.y));
 			

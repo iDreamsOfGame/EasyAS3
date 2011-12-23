@@ -1,6 +1,148 @@
 CHANGE LOG : GREENSOCK TWEENING PLATFORM
 ----------------------------------------
 
+2011-12-08
+---------------------------------------------
+TweenLite			1.695
+TweenMax			1.695
+TimelineLite		1.695
+TimelineMax			1.695
+	- Fixed issue that could cause a delayedCall(), zero-duration tween, or a callback added to TimelineMax with its addCallback() method to be called an extra time when playing in reverse (and only when the parent TimelineMax renders EXACTLY on that callback's startTime before moving on). 
+
+2011-12-06
+---------------------------------------------
+TimelineMax			1.694
+TweenMax			1.694
+	- Fixed issue that could cause a timeline that has a non-zero "repeat" to trigger callbacks in child tweens when its currentProgress is set to 0 after having repeated at least once. 
+	- Fixed issue that caused TimelineMax to always render in its first cycle when currentProgress was set, rather than honoring the current cycle if it had repeated one or more times. 
+
+2011-11-29
+---------------------------------------------
+BlitMask				0.5
+FlexBlitMask				0.5
+	- Fixed issue that could cause the new normalizePosition() to reposition the target incorrectly in certain scenarios
+
+2011-11-26
+---------------------------------------------
+BlitMask					0.46
+FlexBlitMask				0.46
+	- Added normalizePosition() method to BlitMask and FlexBlitMask
+	- Now when bitmapMode is set to false on a BlitMask/FlexBlitMask and "wrap" is true, it will automatically call normalizePosition() so that the target is repositioned inside the BlitMask/FlexBlitMask.
+	- Fixed issue that could cause some 1-pixel vibrations in portions of a wrapped BlitMask/FlexBlitMask (only in a very specific scenario). 
+
+2011-11-11
+---------------------------------------------
+FlexBlitMask				0.45
+	- Fixed an incompatibility with spark components in FlexBlitMask
+
+2011-11-08
+---------------------------------------------
+TimelineLite			1.693
+TimelineMax				1.693
+	- Fixed issue that could (in a very uncommon situation) cause a TimelineLite or TimelineMax not to render a tween that was inserted after it had completed and the rawTime of its parent was past the end of the timeline.
+
+2011-11-07
+---------------------------------------------
+TweenLite				1.693
+TweenMax				1.693
+	- Fixed issue that could cause a tween to act as though it completed when it is rendered at its end state while reversed (like if its currentProgress or totalProgress is set to 1 or if its totalTime is set to totalDuration or if currentTime is set to duration). Again, this only happens incorrectly when the tween is reversed.
+
+2011-11-04
+---------------------------------------------
+BlitMask				0.44
+FlexBlitMask			0.44
+	- Added FlexBlitMask which is just BlitMask built for Flex compatibility. 
+	- Fine-tuned some internal code so that it better prevents errors in very specific scenarios (like setting the target to null initially) and avoids slight vibration of wrapped portions of the target.
+
+2011-10-29
+---------------------------------------------
+BlitMask				0.43
+	- Added some error catching so that if a BlitMask's width or height is set to a negative value, an error will be thrown.
+	- Cleaned up the destroy() routine internally. For example, autoUpdate is forced to false and if you call update() after the BlitMask has been destroyed, it no longer throws runtime errors (it fails silently). 
+
+2011-10-28
+---------------------------------------------
+BlitMask				0.42
+	- BlitMask now automatically copies the target's blendMode when its bitmapMode is turned on.
+
+2011-10-27
+---------------------------------------------
+TweenCore				1.692
+TweenMax				1.692
+	- Fixed issue that could cause a TweenMax with repeat:-1 (infinite) whose "duration" property is set after being created (like myTween.duration = 2) to cause the tween to stop repeating thereafter.
+
+2011-10-20
+--------------------------------------------
+BlitMask				0.41
+	- Fixed a problem that could cause filters to render twice (doubling their strength) in BlitMask when bitmapMode is true. 
+
+2011-10-11
+--------------------------------------------
+BlitMask				0.4
+	- Fixed a problem that could cause the "wrap" feature of BlitMask to leave a 1-pixel (or less) gap between the copies of the target when the target's x/y coordinates weren't on whole pixels values.
+	- Refined the code inside BlitMask's main rendering routine for better performance and accuracy. 
+
+2011-10-06
+--------------------------------------------
+BlitMask				0.3
+	- Added "wrap" feature to BlitMask along with "wrapOffsetX" and "wrapOffsetY" properties. See ASDocs for details.
+
+2011-09-28
+---------------------------------------------
+TweenCore				1.691
+TweenLite				11.691
+TweenMax				11.691
+TimelineLite			1.691
+TimelineMax				1.691
+	- Fixed issue that could cause a resumed tween/timeline incorrectly adjust its startTime if it wasn't paused before it was resumed.
+
+2011-09-21
+---------------------------------------------
+TweenLite				11.66
+	- Fixed an internal issue that could (in very rare situations) cause a gradual performance decline if the same tween finishes and then gets manually restarted infinitely (in this case an internal array's length would grow by one each restart and didn't get flushed until the tween had finished for about 60 frames). 
+
+2011-09-15
+---------------------------------------------
+TintPlugin				1.3
+ColorTransformPlugin	1.7
+	- Tweaked the tint and colorTransform plugins so that they only tween the individual properties necessary. For example, TweenMax.to(mc, 2, {colorTransform:{blueOffset:255}}) will only affect the blueOffset instead of recording and refreshing the starting values of the other properties like redOffset, greenOffset, etc. This means it's possible to set up multiple colorTransform tweens that run simultaneously (with overwrite:false) that each control different portions of the colorTransform (useful if the tweens need to have different durations).
+
+2011-08-31
+---------------------------------------------
+ThrowPropsPlugin		0.7
+	- Tweaked the algorithms in ThrowPropsPlugin.to() so that if the velocity is below 10 and the end value exceeds the max or min, the duration snaps to 0.75 for convenience. Otherwise, if the velocity was very slow, the duration was uncomfortably long. For example, in the scrolling sample (Plugin Explorer), if the user dragged the content past the bounds and then stopped their mouse and released it, the content would very slowly return to the edge instead of snapping their relatively quickly.
+
+2011-08-30
+---------------------------------------------
+BlitMask			0.23
+	- Fixed issue in BlitMask that could cause it not to draw/size itself correctly on the first render when the target is empty or isn't overlapping the masked area at all.
+
+2011-08-29
+---------------------------------------------
+TimelineLite			1.672
+SimpleTimeline			1.672
+	- Fixed issue that could cause a tween or timeline to play at the wrong time if its delay is changed while it is paused and then later play() is called.
+
+2011-08-26
+---------------------------------------------
+BlitMask				0.21
+	- Added BlitMask
+	- Fixed 1 pixel offset on the x-axis in certain situations for BlitMask
+
+2011-08-09
+---------------------------------------------
+TimelineLite			1.671
+TimelineMax				1.671
+	- Fixed issue that could cause a reversed TimelineLite/Max to stop if its totalTime is set to exactly its duration.
+
+2011-07-07
+---------------------------------------------
+TweenLite				11.63
+TweenMax				11.69
+TweenMaxVars			5.14
+	- Made TweenLite.from(), TweenMax.from(), TweenMax.allFrom(), and TweenMax.allFromTo() compatible with the TweenLiteVars and TweenMaxVars data classes
+	- Fixed warning trace() that could show up if you created a TweenMaxVars object BEFORE ever referencing TweenMax in your code. 
+
 2011-06-28
 ---------------------------------------------
 TintPlugin				1.2

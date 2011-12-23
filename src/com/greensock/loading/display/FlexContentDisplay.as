@@ -1,6 +1,6 @@
 /**
- * VERSION: 1.851
- * DATE: 2011-04-29
+ * VERSION: 1.895
+ * DATE: 2011-11-27
  * AS3
  * UPDATES AND DOCS AT: http://www.greensock.com/loadermax/
  **/
@@ -14,6 +14,7 @@ package com.greensock.loading.display {
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.media.Video;
 	
 	import mx.core.UIComponent;
 /**
@@ -71,6 +72,8 @@ package com.greensock.loading.display {
 		protected var _fitHeight:Number;
 		/** @private only used when crop is true - works around bugs in Flash with the way it reports getBounds() on objects with a scrollRect. **/
 		protected var _cropContainer:Sprite;
+		/** @private Primarily for Video objects which don't act like anything else - we must store the original width/height ratio in this variable so that we can properly apply scaleModes **/
+		protected var _nativeRect:Rectangle;
 		
 		/** @private A place to reference an object that should be protected from gc - this is used in VideoLoader in order to protect the NetStream object when the loader is disposed. **/
 		public var gcProtect:*;
@@ -105,6 +108,7 @@ package com.greensock.loading.display {
 			}
 			this.rawContent = null;
 			this.gcProtect = null;
+			_cropContainer = null;
 			if (_loader != null) {
 				if (unloadLoader) {
 					_loader.unload();
@@ -131,14 +135,22 @@ package com.greensock.loading.display {
 				return;
 			}
 			var mc:DisplayObject = _rawContent;
-			var contentWidth:Number =  mc.width;
-			var contentHeight:Number = mc.height;
-			
-			if (_loader.hasOwnProperty("getClass")) { //for SWFLoaders, use loaderInfo.width/height so that everything is based on the stage size, not the bounding box of the DisplayObjects that happen to be on the stage (which could be much larger or smaller than the swf's stage)
-				var m:Matrix = mc.transform.matrix;
-				var loaderInfo:LoaderInfo = (mc is Loader) ? Object(mc).contentLoaderInfo : mc.loaderInfo;
-				contentWidth = loaderInfo.width * Math.abs(m.a) + loaderInfo.height * Math.abs(m.b);
-				contentHeight = loaderInfo.width * Math.abs(m.c) + loaderInfo.height * Math.abs(m.d);
+			var m:Matrix = mc.transform.matrix;
+			var nativeBounds:Object, contentWidth:Number, contentHeight:Number;
+			if (mc is Video) {//Video objects don't accurately report getBounds() - they act like their native dimension is always 160x320.
+				nativeBounds = _nativeRect;
+				contentWidth = mc.width;
+				contentHeight = mc.height;
+			} else {
+				if (mc is Loader) {
+					nativeBounds = Loader(mc).contentLoaderInfo; 
+				} else if (_loader != null && _loader.hasOwnProperty("getClass")) {
+					nativeBounds = mc.loaderInfo; //for SWFLoaders, use loaderInfo.width/height so that everything is based on the stage size, not the bounding box of the DisplayObjects that happen to be on the stage (which could be much larger or smaller than the swf's stage)
+				} else {
+					nativeBounds = mc.getBounds(mc);
+				}
+				contentWidth = nativeBounds.width * Math.abs(m.a) + nativeBounds.height * Math.abs(m.b);
+				contentHeight = nativeBounds.width * Math.abs(m.c) + nativeBounds.height * Math.abs(m.d);
 			}
 			
 			if (_fitWidth > 0 && _fitHeight > 0) {
@@ -150,7 +162,7 @@ package com.greensock.loading.display {
 				
 				if (_scaleMode != "none") {
 					var displayRatio:Number = w / h;
-					var contentRatio:Number = contentWidth / contentHeight;
+					var contentRatio:Number = nativeBounds.width / nativeBounds.height;
 					if ((contentRatio < displayRatio && _scaleMode == "proportionalInside") || (contentRatio > displayRatio && _scaleMode == "proportionalOutside")) {
 						w = h * contentRatio;
 					}
@@ -207,15 +219,17 @@ package com.greensock.loading.display {
 			measure();
 		}
 		
+		/** @private **/
 		override protected function measure():void {
-			var bounds:Rectangle = this.getBounds(this);
-			this.explicitWidth = bounds.width;
-			this.explicitHeight = bounds.height;
+			var bounds:Rectangle;
 			if (this.parent) {
 				bounds = this.getBounds(this.parent);
 				this.width = bounds.width;
 				this.height = bounds.height;
 			}
+			bounds = this.getBounds(this);
+			this.explicitWidth = bounds.width;
+			this.explicitHeight = bounds.height;
 			super.measure();
 		}
 		
@@ -277,7 +291,7 @@ package com.greensock.loading.display {
 			return _scaleMode;
 		}
 		public function set scaleMode(value:String):void {
-			if (value == "none" && _rawContent != null) {
+			if (_rawContent != null) {
 				_rawContent.scaleX = _rawContent.scaleY = 1;
 			}
 			_scaleMode = value;
@@ -409,8 +423,10 @@ package com.greensock.loading.display {
 			_rawContent = value as DisplayObject;
 			if (_rawContent == null) {
 				return;
+			} else if (_rawContent.parent == null || (_rawContent.parent != this && _rawContent.parent != _cropContainer)) {
+				addChildAt(_rawContent as DisplayObject, 0);
 			}
-			addChildAt(_rawContent as DisplayObject, 0);
+			_nativeRect = new Rectangle(0, 0, _rawContent.width, _rawContent.height);
 			_update();
 		}
 		
