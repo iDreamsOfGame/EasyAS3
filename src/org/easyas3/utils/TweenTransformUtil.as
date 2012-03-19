@@ -1,9 +1,9 @@
 package org.easyas3.utils
 {
-	import com.greensock.easing.*;
-	import com.greensock.plugins.*;
 	import com.greensock.TweenLite;
 	import com.greensock.TweenMax;
+	import com.greensock.easing.*;
+	import com.greensock.plugins.*;
 	
 	/**
 	 * ... 缓动转场特效工具类 ...
@@ -60,10 +60,8 @@ package org.easyas3.utils
 		 */
 		public static function motionBlur(target:Object, duration:Number, toX:Number, toY:Number, blurX:Number = 10, blurY:Number = 10, remove:Boolean = false, onStart:Function = null, onStartParams:Array = null, onComplete:Function = null, onCompleteParams:Array = null):void 
 		{
-			TweenPlugin.activate([BlurFilterPlugin]);
-			TweenLite.to(target, duration, { x: toX, y: toY, ease: Quint.easeIn, onStart: onStart, onStartParams: onStartParams, onComplete: onComplete, onCompleteParams: onCompleteParams } );
-			TweenMax.to(target, duration / 2, { blurFilter: { blurX:blurX, blurY:blurY, remove:remove }, ease: Quint.easeIn } );
-			TweenMax.to(target, duration / 2, { blurFilter: { blurX:0, blurY:0, remove:remove }, ease: Quint.easeIn } );
+			TweenPlugin.activate([MotionBlurPlugin]);
+			TweenLite.to(target, duration, { x: toX, y: toY, motionBlur:true, ease: Quint.easeIn, onStart: onStart, onStartParams: onStartParams, onComplete: onComplete, onCompleteParams: onCompleteParams } );
 		}
 		
 		/**

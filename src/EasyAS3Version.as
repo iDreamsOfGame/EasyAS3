@@ -15,12 +15,12 @@
 		/**
 		 * 子版本号
 		 */
-		public static const MINOR_VERSION:uint = 46;
+		public static const MINOR_VERSION:uint = 47;
 		
 		/**
 		 * 修正版本号
 		 */
-		public static const BUILD_VERSION:uint = 11;
+		public static const BUILD_VERSION:uint = 12;
 	}
 
 }
