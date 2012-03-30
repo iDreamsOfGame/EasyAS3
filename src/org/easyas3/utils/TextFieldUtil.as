@@ -23,6 +23,7 @@ package org.easyas3.utils
 			var bmp:Bitmap = new Bitmap(bmpData);
 			bmpData.draw(textfield);
 			bmp.smoothing = true;
+			bmp.rotation = rotation;
 			return bmp;
 		}
 	}
