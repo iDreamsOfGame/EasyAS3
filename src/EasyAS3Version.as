@@ -20,7 +20,7 @@
 		/**
 		 * 修正版本号
 		 */
-		public static const BUILD_VERSION:uint = 12;
+		public static const BUILD_VERSION:uint = 13;
 	}
 
 }

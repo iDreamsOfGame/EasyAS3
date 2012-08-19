@@ -1,15 +1,16 @@
 ﻿package org.easyas3.utils
 {
+	import com.adobe.utils.StringUtil;
+	
 	import flash.utils.*;
 	import flash.utils.getQualifiedClassName;
-	import com.adobe.utils.StringUtil;
 	
 	/**
 	 * ... 字符串工具类 ...
 	 * @author Jerry
-	 * @version 0.9.5
+	 * @version 0.9.7
 	 */
-	public final class StringUtil extends com.adobe.utils.StringUtil
+	public final class StringUtil
 	{
 		/** ASCII 编码格式 */
 		public static const ASCII:String = "us-ascii";
@@ -68,7 +69,8 @@
 		public static function getClassName(object:Object) : String
 		{
 			var className:String = getQualifiedClassName(object);
-			className = className.split("::")[1];
+			var str:Array = className.split("::");
+			className = str.length == 1?str[0]:str[1];
 			return className;
 		}
 		
