@@ -16,7 +16,7 @@ package org.easyas3.components
 	import org.easyas3.events.IAdvancedEventDispatcher;
 	
 	/**
-	 * 新手引导遮罩类
+	 * 新手引导遮罩组件
 	 * @author Jerry
 	 */
 	public class TutorialMask extends Sprite implements IAdvancedEventDispatcher

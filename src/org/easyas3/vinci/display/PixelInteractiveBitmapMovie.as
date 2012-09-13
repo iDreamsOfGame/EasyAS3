@@ -8,6 +8,7 @@
 
 package org.easyas3.vinci.display
 {
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
@@ -24,11 +25,11 @@ package org.easyas3.vinci.display
 		 * 鼠标事件集合
 		 * @private
 		 */
-		private static const MOUSE_EVENTS:Dictionary = new Dictionary();
+		private static const MOUSE_EVENTS:Object = { };
 		
 		MOUSE_EVENTS[MouseEvent.CLICK] = PixelMouseEvent.CLICK;											//鼠标单击事件
 		MOUSE_EVENTS[MouseEvent.DOUBLE_CLICK] = PixelMouseEvent.DOUBLE_CLICK;				//鼠标双击事件
-		MOUSE_EVENTS[MouseEvent.MOUSE_DOWN] = PixelMouseEvent.MOUSE_DOWN;					//鼠标按键按下事件
+		MOUSE_EVENTS[MouseEvent.MOUSE_DOWN] = PixelMouseEvent.MOUSE_DOWN;				//鼠标按键按下事件
 		MOUSE_EVENTS[MouseEvent.MOUSE_MOVE] = PixelMouseEvent.MOUSE_MOVE;					//鼠标移动事件
 		MOUSE_EVENTS[MouseEvent.MOUSE_UP] = PixelMouseEvent.MOUSE_UP;							//鼠标按键弹起事件
 			
@@ -51,6 +52,12 @@ package org.easyas3.vinci.display
 		private var _mouseIn:Boolean;
 		
 		/**
+		 * 是否支持鼠标Roll事件
+		 * @private
+		 */
+		private var _rollEnabled:Boolean = true;
+		
+		/**
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
 		 */
@@ -62,9 +69,6 @@ package org.easyas3.vinci.display
 			{
 				addEventListener(key, commonMouseEventHandler);
 			}
-			
-			addEventListener(MouseEvent.ROLL_OVER, mouseInOutHandler);
-			addEventListener(MouseEvent.ROLL_OUT, mouseInOutHandler);
 		}
 		
 		/**
@@ -96,31 +100,25 @@ package org.easyas3.vinci.display
 			}
 			
 			_mouseIn = value;
-			
-			if (_mouseIn)
-			{
-				removeEventListener(MouseEvent.MOUSE_MOVE, mouseInOutHandler);
-				
-				if (stage != null)
-				{
-					stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseInOutHandler);
-				}
-				
-				mouseEventType = PixelMouseEvent.ROLL_OVER;
-			}
-			else
-			{
-				addEventListener(MouseEvent.MOUSE_MOVE, mouseInOutHandler);
-				
-				if (stage != null)
-				{
-					stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseInOutHandler);
-				}
-				
-				mouseEventType = PixelMouseEvent.ROLL_OUT;
-			}
+			mouseEventType = _mouseIn?PixelMouseEvent.ROLL_OVER:PixelMouseEvent.ROLL_OUT;
 			
 			dispatchEvent(new PixelMouseEvent(mouseEventType, mouseX, mouseY));
+		}
+		
+		/**
+		 * 是否支持鼠标Roll事件
+		 */
+		public function get rollEnabled():Boolean 
+		{
+			return _rollEnabled;
+		}
+		
+		/**
+		 * 是否支持鼠标Roll事件
+		 */
+		public function set rollEnabled(value:Boolean):void 
+		{
+			_rollEnabled = value;
 		}
 		
 		/**
@@ -167,9 +165,6 @@ package org.easyas3.vinci.display
 			{
 				removeEventListener(key, commonMouseEventHandler);
 			}
-			
-			removeEventListener(MouseEvent.ROLL_OVER, mouseInOutHandler);
-			removeEventListener(MouseEvent.ROLL_OUT, mouseInOutHandler);
 		}
 		
 		/**
@@ -191,7 +186,11 @@ package org.easyas3.vinci.display
 		{
 			super.gotoFrameIndex(index);
 			
-			checkMouseInOut();
+			if (_rollEnabled)
+			{
+				//判断是否支持鼠标Roll事件则检测ROLL_OVER和ROLL_OUT事件是否触发
+				checkMouseInOut();
+			}
 		}
 		
 		/**
@@ -222,20 +221,10 @@ package org.easyas3.vinci.display
 		 */
 		private function commonMouseEventHandler(e:MouseEvent):void 
 		{
-			if (isPointTransparent(_bmp.mouseX, _bmp.mouseY) == false)
+			if (!isPointTransparent(_bmp.mouseX, _bmp.mouseY))
 			{
 				dispatchEvent(new PixelMouseEvent(MOUSE_EVENTS[e.type], mouseX, mouseY));
 			}
-		}
-		
-		/**
-		 * 鼠标移入移出事件监听
-		 * @private
-		 * @param	e:MouseEvent — 鼠标事件对象
-		 */
-		private function mouseInOutHandler(e:MouseEvent):void 
-		{
-			checkMouseInOut();
 		}
 	}
 }

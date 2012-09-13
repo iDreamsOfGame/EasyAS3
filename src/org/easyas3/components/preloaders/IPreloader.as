@@ -6,7 +6,7 @@
  * cosmos53076@163.com
  */
 
-package org.easyas3.preloaders 
+package org.easyas3.components.preloaders 
 {
 	import org.easyas3.events.IAdvancedEventDispatcher;
 	
