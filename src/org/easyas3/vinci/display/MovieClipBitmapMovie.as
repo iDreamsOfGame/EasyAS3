@@ -9,7 +9,6 @@
 package org.easyas3.vinci.display
 {
 	import flash.display.Bitmap;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import org.easyas3.pool.IPoolObject;
 	
@@ -17,18 +16,8 @@ package org.easyas3.vinci.display
 	 * 位图动画
 	 * @author Jerry
 	 */
-	public class BitmapMovie extends Sprite implements IPoolObject
+	public class MovieClipBitmapMovie extends BitmapMovieBase implements IPoolObject
 	{
-		/**
-		 * 自定义数据
-		 */
-		protected var _data:Object;
-		
-		/**
-		 * 位图显示对象
-		 */
-		protected var _bmp:Bitmap;
-		
 		/**
 		 * 指定播放头在动画序列中的帧索引
 		 */
@@ -40,50 +29,24 @@ package org.easyas3.vinci.display
 		protected var _maxIndex:int;
 		
 		/**
-		 * 动画是否在播放中
-		 */
-		protected var _isPlaying:Boolean;
-		
-		/**
 		 * 位图动画帧信息序列
 		 */
 		protected var _frames:Vector.<BitmapFrameInfo>;
 		
 		/**
-		 * 对象使用中标识
-		 */
-		protected var _using:Boolean;
-		
-		/**
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
 		 */
-		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null)
+		public function MovieClipBitmapMovie(frames:Vector.<BitmapFrameInfo> = null)
 		{
 			super();
 			
-			_bmp = new Bitmap();
+			_bitmap = new Bitmap();
 			initialize();
 			this.frames = frames;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedHandler);
 			addEventListener(Event.REMOVED_FROM_STAGE, removedHandler);
-		}
-		
-		/**
-		 * 自定义数据
-		 */
-		public function get data():Object 
-		{
-			return _data;
-		}
-		
-		/**
-		 * 自定义数据
-		 */
-		public function set data(value:Object):void 
-		{
-			_data = value;
 		}
 		
 		/**
@@ -100,7 +63,7 @@ package org.easyas3.vinci.display
 		public function set frames(value:Vector.<BitmapFrameInfo>):void 
 		{
 			_frames = value;
-			_bmp.bitmapData = null;
+			_bitmap.bitmapData = null;
 			
 			if (_frames == null)
 			{
@@ -134,33 +97,6 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 位图是否启用平滑处理
-		 */
-		public function get smoothing():Boolean 
-		{
-			return _bmp?_bmp.smoothing:false;
-		}
-		
-		/**
-		 * 位图是否启用平滑处理
-		 */
-		public function set smoothing(value:Boolean):void 
-		{
-			if (_bmp != null)
-			{
-				_bmp.smoothing = value;
-			}
-		}
-		
-		/**
-		 * 动画是否在播放中
-		 */
-		public function get isPlaying():Boolean 
-		{
-			return _isPlaying;
-		}
-		
-		/**
 		 * 当前位图帧信息
 		 */
 		public function get currentBitmapFrameInfo():BitmapFrameInfo
@@ -169,25 +105,9 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 对象使用中标识
-		 */
-		public function get using():Boolean 
-		{
-			return _using;
-		}
-		
-		/**
-		 * 对象使用中标识
-		 */
-		public function set using(value:Boolean):void 
-		{
-			_using = value;
-		}
-		
-		/**
 		 * 播放动画
 		 */
-		public function play():void 
+		override public function play():void 
 		{
 			_isPlaying = true;
 			updatePlayStatus();
@@ -196,7 +116,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 停止播放动画
 		 */
-		public function stop():void 
+		override public function stop():void 
 		{
 			_isPlaying = false;
 			updatePlayStatus();
@@ -206,7 +126,7 @@ package org.easyas3.vinci.display
 		 * 从指定帧开始播放动画
 		 * @param	frame:int — 帧数
 		 */
-		public function gotoAndPlay(frame:int):void 
+		override public function gotoAndPlay(frame:int):void 
 		{
 			gotoFrame(frame)
 			play();
@@ -216,7 +136,7 @@ package org.easyas3.vinci.display
 		 * 将播放头移到动画指定帧并停在那里
 		 * @param	frame:int — 帧数
 		 */
-		public function gotoAndStop(frame:int):void 
+		override public function gotoAndStop(frame:int):void 
 		{
 			gotoFrame(frame);
 			stop();
@@ -235,7 +155,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 将播放头转到下一帧并停止
 		 */
-		public function nextFrame():void 
+		override public function nextFrame():void 
 		{
 			if (_currentIndex == _maxIndex)
 			{
@@ -248,18 +168,45 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 克隆对象
-		 * @return
+		 * 跳转到指定索引的帧
+		 * @param	index:int — 帧索引
 		 */
-		public function clone():IPoolObject
+		override public function gotoFrameIndex(index:int):void 
 		{
-			return new BitmapMovie(_frames);
+			var bmpFrameInfo:BitmapFrameInfo;
+			
+			_currentIndex = index;
+			
+			//边界值检查
+			if (_currentIndex > _maxIndex)
+			{
+				_currentIndex = _maxIndex;
+			}
+			else if (_currentIndex < 0)
+			{
+				_currentIndex = 0;
+			}
+			
+			//显示指定帧索引的位图
+			bmpFrameInfo = _frames[_currentIndex];
+			_bitmap.bitmapData = bmpFrameInfo.bitmapData;
+			_bitmap.x = bmpFrameInfo.x;
+			_bitmap.y = bmpFrameInfo.y;
+		}
+		
+		/**
+		 * 克隆对象
+		 * @return IPoolObject — 对象池接口对象
+		 */
+		override public function clone():IPoolObject
+		{
+			return new MovieClipBitmapMovie(_frames);
 		}
 		
 		/**
 		 * 重置对象属性
 		 */
-		public function reset():void 
+		override public function reset():void 
 		{
 			initialize();
 		}
@@ -267,15 +214,15 @@ package org.easyas3.vinci.display
 		/**
 		 * 销毁对象
 		 */
-		public function dispose():void 
+		override public function dispose():void 
 		{
 			stop();
 			
 			_frames = null;
 			
-			if (contains(_bmp))
+			if (contains(_bitmap))
 			{
-				removeChild(_bmp);
+				removeChild(_bitmap);
 			}
 			
 			//移出事件监听
@@ -302,39 +249,12 @@ package org.easyas3.vinci.display
 			scaleX = 1;
 			scaleY = 1;
 			
-			addChild(_bmp);
+			addChild(_bitmap);
 			
 			_currentIndex = 0;
 			_maxIndex = 0;
 			
 			play();
-		}
-		
-		/**
-		 * 跳转到指定索引的帧
-		 * @param	index:int — 帧索引
-		 */
-		protected function gotoFrameIndex(index:int):void 
-		{
-			var bmpFrameInfo:BitmapFrameInfo;
-			
-			_currentIndex = index;
-			
-			//边界值检查
-			if (_currentIndex > _maxIndex)
-			{
-				_currentIndex = _maxIndex;
-			}
-			else if (_currentIndex < 0)
-			{
-				_currentIndex = 0;
-			}
-			
-			//显示指定帧索引的位图
-			bmpFrameInfo = _frames[_currentIndex];
-			_bmp.bitmapData = bmpFrameInfo.bitmapData;
-			_bmp.x = bmpFrameInfo.x;
-			_bmp.y = bmpFrameInfo.y;
 		}
 		
 		/**

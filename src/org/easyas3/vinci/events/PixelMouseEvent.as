@@ -8,7 +8,6 @@
 
 package org.easyas3.vinci.events
 {
-	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	

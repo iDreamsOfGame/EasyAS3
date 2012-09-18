@@ -11,9 +11,10 @@ package
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
+	
 	import org.easyas3.vinci.display.BitmapFrameInfo;
-	import org.easyas3.vinci.display.BitmapMovie;
-	import org.easyas3.vinci.display.PixelInteractiveBitmapMovie;
+	import org.easyas3.vinci.display.MovieClipBitmapMovie;
+	import org.easyas3.vinci.display.PixelInteractiveMovieClipBitmapMovie;
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
@@ -38,8 +39,8 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveBitmapMovie = new PixelInteractiveBitmapMovie();
-				mc.rollEnabled = false;
+				var mc:PixelInteractiveMovieClipBitmapMovie = new PixelInteractiveMovieClipBitmapMovie();
+				mc.rollEnabled = true;
 				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);
 				mc.addEventListener(PixelMouseEvent.CLICK, mcClick);
@@ -56,26 +57,26 @@ package
 		
 		private function mcRollOver(e:MouseEvent):void 
 		{
-			(e.target as BitmapMovie).filters = mcFilters;
+			(e.target as MovieClipBitmapMovie).filters = mcFilters;
 		}
 		
 		private function mcRollOut(e:MouseEvent):void 
 		{
-			var mc:BitmapMovie = e.target as BitmapMovie;
+			var mc:MovieClipBitmapMovie = e.target as MovieClipBitmapMovie;
 			mc.filters = null;
 		}
 		
 		private function mcPixelRollOver(evt:MouseEvent):void
 		{
 			
-			(evt.target as BitmapMovie).filters = mcFilters;
+			(evt.target as MovieClipBitmapMovie).filters = mcFilters;
 			
 		}
 		
 		private function mcPixelRollOut(evt:MouseEvent):void
 		{
 			
-			var mc:BitmapMovie = evt.target as BitmapMovie;
+			var mc:MovieClipBitmapMovie = evt.target as MovieClipBitmapMovie;
 			mc.filters = null;
 			
 		}
@@ -83,7 +84,7 @@ package
 		private function mcClick(evt:MouseEvent):void
 		{
 			
-			var mc:BitmapMovie = evt.target as BitmapMovie;
+			var mc:MovieClipBitmapMovie = evt.target as MovieClipBitmapMovie;
 			if (mc.scaleX < 1)
 			{
 				mc.scaleX = 1;
@@ -164,7 +165,7 @@ package
 				var tmpColumn:int = strColumn;
 				while (tmpColumn < endColumn)
 				{
-					var mc:BitmapMovie;
+					var mc:MovieClipBitmapMovie;
 					mc = pool.pop();
 					//mc = pool.getObj();
 					//mc = new BitmapMovie();

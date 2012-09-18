@@ -17,6 +17,8 @@ package org.easyas3.vinci.utils
 	import org.easyas3.utils.DisplayObjectUtil;
 	import org.easyas3.utils.MathUtil;
 	import org.easyas3.vinci.display.BitmapFrameInfo;
+	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
+	import org.easyas3.vinci.display.SpriteSheetLayout;
 	
 	/**
 	 * 位图缓存器
@@ -156,6 +158,92 @@ package org.easyas3.vinci.utils
 			}
 			
 			return bitmapFrameInfos;
+		}
+		
+		/**
+		 * 缓存精灵序列图
+		 * @param	source:DisplayObject — 被绘制的目标显示对象
+		 * @param	spriteWidth:int — 精灵序列图宽度
+		 * @param	spriteHeight:int — 精灵序列图高度
+		 * @param	direction:String (default = "horizontal") — 精灵序列图排列方向
+		 * @param	transparent:Boolean (default = true) — 精灵序列图是否透明
+		 * @param	fillColor:uint (default = 0x00000000) — 精灵序列图填充的颜色（ARGB） 
+		 * @param	scale:Number (default = 1.0) — 精灵序列图缩放比例
+		 * @return	SpriteSheetBitmapInfo — 精灵序列图信息
+		 */
+		public static function cacheSpriteSheet(source:DisplayObject, spriteWidth:int, spriteHeight:int, direction:String = SpriteSheetLayout.HORIZONTAL, transparent:Boolean = true, fillColor:uint = 0x00000000, scale:Number = 1.0):SpriteSheetBitmapInfo 
+		{
+			var outCount:int;
+			var insideCount:int;
+			var widthIndex:int;
+			var heightIndex:int;
+			var bmpData:BitmapData;
+			var spriteSheetBmpInfo:SpriteSheetBitmapInfo;
+			
+			//获取整张图片的范围
+			var rect:Rectangle = source.getBounds(source);
+			
+			//有效宽度和高度
+			var validWidth:int = (rect.width + MathUtil.round(rect.x)) * scale;
+			var validHeight:int = (rect.height + MathUtil.round(rect.y)) * scale;
+			
+			//计算行数和列数
+			var rowCount:int = MathUtil.ceil(validHeight / spriteHeight);
+			var columnCount:int = MathUtil.ceil(validWidth / spriteWidth);
+			
+			//初始化精灵序列图存储
+			var spriteSheetBitmaps:Array;
+			
+			if (direction == SpriteSheetLayout.HORIZONTAL)
+			{
+				outCount = rowCount;
+				insideCount = columnCount;
+			}
+			else
+			{
+				outCount = columnCount;
+				insideCount = rowCount;
+			}
+			
+			spriteSheetBitmaps = new Array(outCount);
+			
+			//获取BitmapData二维数组对象
+			for (var i:int = 0; i < outCount; i++) 
+			{
+				spriteSheetBitmaps[i] = new Array(insideCount);
+				
+				for (var j:int = 0; j < insideCount; j++) 
+				{
+					if (direction == SpriteSheetLayout.HORIZONTAL)
+					{
+						widthIndex = j;
+						heightIndex = i;
+					}
+					else
+					{
+						widthIndex = i;
+						heightIndex = j;
+					}
+					
+					bmpData = new BitmapData(spriteWidth, spriteHeight, transparent, fillColor);
+					bmpData.draw(source, new Matrix(scale, 0, 0, -spriteWidth * widthIndex, -spriteHeight * heightIndex), null, null, null, true);
+					spriteSheetBitmaps[i][j] = bmpData;
+				}
+			}
+			
+			//存储精灵序列表对象数据
+			spriteSheetBmpInfo = new SpriteSheetBitmapInfo();
+			spriteSheetBmpInfo.direction = direction;
+			spriteSheetBmpInfo.row = outCount;
+			spriteSheetBmpInfo.column = insideCount;
+			spriteSheetBmpInfo.validWidth = validWidth;
+			spriteSheetBmpInfo.validHeight = validHeight;
+			spriteSheetBmpInfo.spriteWidth = spriteWidth;
+			spriteSheetBmpInfo.spriteHeight = spriteHeight;
+			spriteSheetBmpInfo.spriteSheetBitmaps = spriteSheetBitmaps;
+			
+			
+			return spriteSheetBmpInfo;
 		}
 	}
 }
