@@ -13,8 +13,8 @@ package
 	import flash.filters.GlowFilter;
 	
 	import org.easyas3.vinci.display.BitmapFrameInfo;
-	import org.easyas3.vinci.display.MovieClipBitmapMovie;
-	import org.easyas3.vinci.display.PixelInteractiveMovieClipBitmapMovie;
+	import org.easyas3.vinci.display.BitmapMovie;
+	import org.easyas3.vinci.display.PixelInteractiveBitmapMovie;
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
@@ -39,7 +39,7 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveMovieClipBitmapMovie = new PixelInteractiveMovieClipBitmapMovie();
+				var mc:PixelInteractiveBitmapMovie = new PixelInteractiveBitmapMovie();
 				mc.rollEnabled = true;
 				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);
@@ -57,26 +57,26 @@ package
 		
 		private function mcRollOver(e:MouseEvent):void 
 		{
-			(e.target as MovieClipBitmapMovie).filters = mcFilters;
+			(e.target as BitmapMovie).filters = mcFilters;
 		}
 		
 		private function mcRollOut(e:MouseEvent):void 
 		{
-			var mc:MovieClipBitmapMovie = e.target as MovieClipBitmapMovie;
+			var mc:BitmapMovie = e.target as BitmapMovie;
 			mc.filters = null;
 		}
 		
 		private function mcPixelRollOver(evt:MouseEvent):void
 		{
 			
-			(evt.target as MovieClipBitmapMovie).filters = mcFilters;
+			(evt.target as BitmapMovie).filters = mcFilters;
 			
 		}
 		
 		private function mcPixelRollOut(evt:MouseEvent):void
 		{
 			
-			var mc:MovieClipBitmapMovie = evt.target as MovieClipBitmapMovie;
+			var mc:BitmapMovie = evt.target as BitmapMovie;
 			mc.filters = null;
 			
 		}
@@ -84,7 +84,7 @@ package
 		private function mcClick(evt:MouseEvent):void
 		{
 			
-			var mc:MovieClipBitmapMovie = evt.target as MovieClipBitmapMovie;
+			var mc:BitmapMovie = evt.target as BitmapMovie;
 			if (mc.scaleX < 1)
 			{
 				mc.scaleX = 1;
@@ -165,7 +165,7 @@ package
 				var tmpColumn:int = strColumn;
 				while (tmpColumn < endColumn)
 				{
-					var mc:MovieClipBitmapMovie;
+					var mc:BitmapMovie;
 					mc = pool.pop();
 					//mc = pool.getObj();
 					//mc = new BitmapMovie();
