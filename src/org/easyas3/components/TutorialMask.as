@@ -13,6 +13,7 @@ package org.easyas3.components
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	
 	import org.easyas3.events.IAdvancedEventDispatcher;
 	
 	/**

@@ -9,8 +9,10 @@
 package org.easyas3.vinci.display
 {
 	import flash.display.Bitmap;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	
 	import org.easyas3.utils.ColorUtil;
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	
@@ -42,7 +44,7 @@ package org.easyas3.vinci.display
 		 * 位图动画
 		 * @private
 		 */
-		private var _bitmapMovie:BitmapMovieBase;
+		private var _bitmapMovie:BitmapMovie;
 		
 		/**
 		 * 最小Alpha通道值
@@ -66,7 +68,7 @@ package org.easyas3.vinci.display
 		 * 构造函数
 		 * @param	bitmapMovie:Sprite — 位图动画
 		 */
-		public function PixelInteractiveBitmapMovieProxy(bitmapMovie:BitmapMovieBase)
+		public function PixelInteractiveBitmapMovieProxy(bitmapMovie:BitmapMovie)
 		{
 			if (bitmapMovie == null)
 			{
@@ -74,6 +76,7 @@ package org.easyas3.vinci.display
 			}
 			
 			_bitmapMovie = bitmapMovie;
+			_bitmapMovie.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			
 			for (var key:String in MOUSE_EVENTS) 
 			{
@@ -149,19 +152,6 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 跳转到指定索引的帧
-		 * @param	index:int — 帧索引
-		 */
-		public function gotoFrameIndex(index:int):void 
-		{
-			if (_rollEnabled)
-			{
-				//判断是否支持鼠标Roll事件则检测ROLL_OVER和ROLL_OUT事件是否触发
-				checkMouseInOut();
-			}
-		}
-		
-		/**
 		 * 检测坐标点是否为透明颜色
 		 * @param	x:int — x轴位移值
 		 * @param	y:int — y轴位移值
@@ -169,7 +159,7 @@ package org.easyas3.vinci.display
 		 */
 		public function isPointTransparent(x:int, y:int):Boolean 
 		{
-			return ColorUtil.getAlpha(bitmap.bitmapData.getPixel32(x, y)) <= _alphaThreshold;
+			return bitmap.bitmapData?(ColorUtil.getAlpha(bitmap.bitmapData.getPixel32(x, y)) <= _alphaThreshold):true;
 		}
 		
 		/**
@@ -200,7 +190,10 @@ package org.easyas3.vinci.display
 		 */
 		public function checkMouseInOut():void 
 		{
-			mouseIn = !isPointTransparent(bitmap.mouseX, bitmap.mouseY);
+			if (_rollEnabled)
+			{
+				mouseIn = !isPointTransparent(bitmap.mouseX, bitmap.mouseY);
+			}
 		}
 		
 		/**
@@ -209,6 +202,8 @@ package org.easyas3.vinci.display
 		public function dispose():void 
 		{
 			//移除事件监听
+			_bitmapMovie.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			
 			for each (var key:String in MOUSE_EVENTS) 
 			{
 				_bitmapMovie.removeEventListener(key, commonMouseEventHandler);
@@ -226,6 +221,16 @@ package org.easyas3.vinci.display
 			{
 				_bitmapMovie.dispatchEvent(new PixelMouseEvent(MOUSE_EVENTS[e.type], _bitmapMovie.mouseX, _bitmapMovie.mouseY));
 			}
+		}
+		
+		/**
+		 * 帧事件监听
+		 * @private
+		 * @param	e:Event — 事件对象
+		 */
+		private function enterFrameHandler(e:Event):void 
+		{
+			checkMouseInOut();
 		}
 	}
 }

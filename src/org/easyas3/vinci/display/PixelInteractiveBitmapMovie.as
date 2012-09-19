@@ -27,10 +27,10 @@ package org.easyas3.vinci.display
 		 */
 		public function PixelInteractiveBitmapMovie(frames:Vector.<BitmapFrameInfo> = null)
 		{
-			super(frames);
-			
 			_proxy = new PixelInteractiveBitmapMovieProxy(this);
 			_proxy.initialize();
+			
+			super(frames);
 		}
 		
 		/**
@@ -75,6 +75,8 @@ package org.easyas3.vinci.display
 		override public function dispose():void 
 		{
 			super.dispose();
+			
+			_proxy.dispose();
 		}
 		
 		/**
@@ -88,17 +90,6 @@ package org.easyas3.vinci.display
 			{
 				_proxy.initialize();
 			}
-		}
-		
-		/**
-		 * 跳转到指定索引的帧
-		 * @param	index:int — 帧索引
-		 */
-		override public function gotoFrameIndex(index:int):void 
-		{
-			super.gotoFrameIndex(index);
-			
-			_proxy.gotoFrameIndex(index);
 		}
 	}
 }

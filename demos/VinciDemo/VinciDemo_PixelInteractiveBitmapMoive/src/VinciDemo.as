@@ -170,6 +170,7 @@ package
 					//mc = pool.getObj();
 					//mc = new BitmapMovie();
 					mc.frames = BitmapBuffer.getBitmapFrameInfos(arr_item[strRow][tmpColumn]);
+					//mc.stop();
 					list_mc.push(mc);
 					//mc.x = tmpColumn * DemoConfig.ColumnSpace + (Math.random() * 10 - 5);
 					//mc.y = strRow * DemoConfig.RowSpace + (Math.random() * 10 - 5);

@@ -14,6 +14,7 @@ package org.easyas3.vinci.utils
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
 	import org.easyas3.utils.DisplayObjectUtil;
 	import org.easyas3.utils.MathUtil;
 	import org.easyas3.vinci.display.BitmapFrameInfo;
@@ -45,7 +46,7 @@ package org.easyas3.vinci.utils
 		 */
 		public static function storeBitmapFrameInfos(id:String, data:Vector.<BitmapFrameInfo>):void 
 		{
-			_mapData[id] = data;
+			storeMapData(id, data);
 		}
 		
 		/**
@@ -54,6 +55,26 @@ package org.easyas3.vinci.utils
 		 * @return	Vector.<BitmapFrameInfo> — 位图帧信息序列
 		 */
 		public static function getBitmapFrameInfos(id:String):Vector.<BitmapFrameInfo> 
+		{
+			return _mapData[id];
+		}
+		
+		/**
+		 * 存储精灵位图序列
+		 * @param	id:String — 精灵序列图信息序列标识
+		 * @param	data:SpriteSheetBitmapInfo — 精灵位图动画信息
+		 */
+		public static function storeSpriteSheetBitmapInfos(id:String, data:SpriteSheetBitmapInfo):void 
+		{
+			storeMapData(id, data);
+		}
+		
+		/**
+		 * 获取精灵位图序列数据信息
+		 * @param	id:String — 精灵序列图信息序列标识
+		 * @return	SpriteSheetBitmapInfo — 精灵位图动画信息
+		 */
+		public static function getSpriteSheetBitmapInfos(id:String):SpriteSheetBitmapInfo
 		{
 			return _mapData[id];
 		}
@@ -163,22 +184,23 @@ package org.easyas3.vinci.utils
 		/**
 		 * 缓存精灵序列图
 		 * @param	source:DisplayObject — 被绘制的目标显示对象
-		 * @param	spriteWidth:int — 精灵序列图宽度
-		 * @param	spriteHeight:int — 精灵序列图高度
+		 * @param	spriteWidth:int (default = 0) — 精灵序列图宽度
+		 * @param	spriteHeight:int (default = 0) — 精灵序列图高度
+		 * @param	rowCount:int (default = 0) — 精灵序列图行数
+		 * @param	columnCount:int (default = 0) — 精灵序列图列数
 		 * @param	direction:String (default = "horizontal") — 精灵序列图排列方向
 		 * @param	transparent:Boolean (default = true) — 精灵序列图是否透明
 		 * @param	fillColor:uint (default = 0x00000000) — 精灵序列图填充的颜色（ARGB） 
 		 * @param	scale:Number (default = 1.0) — 精灵序列图缩放比例
 		 * @return	SpriteSheetBitmapInfo — 精灵序列图信息
 		 */
-		public static function cacheSpriteSheet(source:DisplayObject, spriteWidth:int, spriteHeight:int, direction:String = SpriteSheetLayout.HORIZONTAL, transparent:Boolean = true, fillColor:uint = 0x00000000, scale:Number = 1.0):SpriteSheetBitmapInfo 
+		public static function cacheSpriteSheet(source:DisplayObject, spriteWidth:int = 0, spriteHeight:int = 0, rowCount:int = 0, columnCount:int = 0, 
+												direction:String = SpriteSheetLayout.HORIZONTAL, transparent:Boolean = true, fillColor:uint = 0x00000000, 
+												scale:Number = 1.0):SpriteSheetBitmapInfo 
 		{
-			var outCount:int;
-			var insideCount:int;
-			var widthIndex:int;
-			var heightIndex:int;
 			var bmpData:BitmapData;
 			var spriteSheetBmpInfo:SpriteSheetBitmapInfo;
+			var spriteSheetBitmaps:Array;
 			
 			//获取整张图片的范围
 			var rect:Rectangle = source.getBounds(source);
@@ -187,63 +209,99 @@ package org.easyas3.vinci.utils
 			var validWidth:int = (rect.width + MathUtil.round(rect.x)) * scale;
 			var validHeight:int = (rect.height + MathUtil.round(rect.y)) * scale;
 			
+			//计算精灵序列图宽度和高度
+			if ((spriteWidth == 0 || spriteHeight == 0) && rowCount != 0 && columnCount != 0)
+			{
+				spriteWidth = MathUtil.ceil(validWidth / columnCount);
+				spriteHeight = MathUtil.ceil(validHeight / rowCount);
+			}
+			
 			//计算行数和列数
-			var rowCount:int = MathUtil.ceil(validHeight / spriteHeight);
-			var columnCount:int = MathUtil.ceil(validWidth / spriteWidth);
+			if ((rowCount == 0 || columnCount == 0) && spriteWidth != 0 && spriteHeight != 0)
+			{
+				rowCount = MathUtil.ceil(validHeight / spriteHeight);
+				columnCount = MathUtil.ceil(validWidth / spriteWidth);
+			}
 			
 			//初始化精灵序列图存储
-			var spriteSheetBitmaps:Array;
-			
-			if (direction == SpriteSheetLayout.HORIZONTAL)
-			{
-				outCount = rowCount;
-				insideCount = columnCount;
-			}
-			else
-			{
-				outCount = columnCount;
-				insideCount = rowCount;
-			}
-			
-			spriteSheetBitmaps = new Array(outCount);
+			spriteSheetBitmaps = new Array(rowCount);
 			
 			//获取BitmapData二维数组对象
-			for (var i:int = 0; i < outCount; i++) 
+			for (var i:int = 0; i < rowCount; i++) 
 			{
-				spriteSheetBitmaps[i] = new Array(insideCount);
+				spriteSheetBitmaps[i] = new Array(columnCount);
 				
-				for (var j:int = 0; j < insideCount; j++) 
+				for (var j:int = 0; j < columnCount; j++) 
 				{
-					if (direction == SpriteSheetLayout.HORIZONTAL)
-					{
-						widthIndex = j;
-						heightIndex = i;
-					}
-					else
-					{
-						widthIndex = i;
-						heightIndex = j;
-					}
-					
 					bmpData = new BitmapData(spriteWidth, spriteHeight, transparent, fillColor);
-					bmpData.draw(source, new Matrix(scale, 0, 0, -spriteWidth * widthIndex, -spriteHeight * heightIndex), null, null, null, true);
+					bmpData.draw(source, new Matrix(scale, 0, 0, scale, -spriteWidth * j, -spriteHeight * i), null, null, null, true);
 					spriteSheetBitmaps[i][j] = bmpData;
 				}
 			}
 			
 			//存储精灵序列表对象数据
 			spriteSheetBmpInfo = new SpriteSheetBitmapInfo();
-			spriteSheetBmpInfo.direction = direction;
-			spriteSheetBmpInfo.row = outCount;
-			spriteSheetBmpInfo.column = insideCount;
+			spriteSheetBmpInfo.row = rowCount;
+			spriteSheetBmpInfo.column = columnCount;
 			spriteSheetBmpInfo.validWidth = validWidth;
 			spriteSheetBmpInfo.validHeight = validHeight;
 			spriteSheetBmpInfo.spriteWidth = spriteWidth;
 			spriteSheetBmpInfo.spriteHeight = spriteHeight;
 			spriteSheetBmpInfo.spriteSheetBitmaps = spriteSheetBitmaps;
 			
-			
 			return spriteSheetBmpInfo;
+		}
+		
+		/**
+		 * 生成帧序列对象
+		 * @private
+		 * @param	spriteSheetBitmaps:Array — 精灵序列图位图集合
+		 * @param	direction:String — 精灵序列图排列布局
+		 * @return	Vector.<BitmapFrameInfo> — 帧信息队列
+		 */
+		public static function generateFrames(spriteSheetBitmaps:Array, direction:String = "horizontal"):Vector.<BitmapFrameInfo> 
+		{
+			var bmpFrameInfo:BitmapFrameInfo;
+			var columnCount:int;
+			var rowCount:int;
+			var frames:Vector.<BitmapFrameInfo>;
+			
+			if(spriteSheetBitmaps == null)
+			{
+				return null;
+			}
+			
+			rowCount = spriteSheetBitmaps.length;
+			frames = new Vector.<BitmapFrameInfo>();
+			
+			for (var i:int = 0; i < rowCount; i++) 
+			{
+				columnCount = (spriteSheetBitmaps[i] as Array).length;
+				
+				for (var j:int = 0; j < columnCount; j++) 
+				{
+					bmpFrameInfo = new BitmapFrameInfo(0, 0, spriteSheetBitmaps[i][j]);
+					frames.push(bmpFrameInfo);
+				}
+			}
+			
+			return frames;
+		}
+		
+		/**
+		 * 存储映射对象
+		 * @private
+		 * @param	id:String — 映射对象标识
+		 * @param	data:* — 映射对象
+		 */
+		private static function storeMapData(id:String, data:*):void 
+		{
+			if (_mapData[id])
+			{
+				throw "Can not store the object, please change id !";
+			}
+			
+			_mapData[id] = data;
 		}
 	}
 }

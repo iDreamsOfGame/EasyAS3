@@ -12,6 +12,7 @@ package org.easyas3.effects
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.utils.Timer;
+	
 	import org.easyas3.events.IAdvancedEventDispatcher;
 	import org.easyas3.events.TypewriterEffectEvent;
 	

@@ -17,12 +17,6 @@ package org.easyas3.vinci.display
 	public class SpriteSheetBitmapInfo
 	{
 		/**
-		 * 排列方向
-		 * @private
-		 */
-		private var _direction:String;
-		
-		/**
 		 * 行数
 		 * @private 
 		 */		
@@ -70,22 +64,6 @@ package org.easyas3.vinci.display
 		public function SpriteSheetBitmapInfo()
 		{
 			
-		}
-		
-		/**
-		 * 排列方向
-		 */
-		public function get direction():String 
-		{
-			return _direction;
-		}
-		
-		/**
-		 * 排列方向
-		 */
-		public function set direction(value:String):void 
-		{
-			_direction = value;
 		}
 		
 		/**

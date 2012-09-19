@@ -12,6 +12,7 @@ package org.easyas3.ui
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
+	
 	import org.easyas3.events.IAdvancedEventDispatcher;
 	
 	/**

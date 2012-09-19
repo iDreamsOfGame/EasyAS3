@@ -32,7 +32,7 @@ package org.easyas3.utils
 		 */
 		public static function ceil(value:Number):int
 		{
-			return (value >> 0) + 1;
+			return (value is int)?value >> 0:(value >> 0) + 1;
 		}
 		
 		/**
