@@ -5,10 +5,13 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.getDefinitionByName;
+	
+	import org.easyas3.vinci.VinciContext;
 	
 	/**
 	 * ...
@@ -57,7 +60,20 @@ package
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, initItems);
 			timer.start();
 			
+			addEventListener(Event.ADDED_TO_STAGE, addedHandler);
+			
 			//initItems();
+		}
+		
+		protected function addedHandler(event:Event):void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, addedHandler);
+			initialize();
+		}
+		
+		protected function initialize():void
+		{
+			VinciContext.stage = stage;
 		}
 		
 		protected var curRow:int = 0;

@@ -11,6 +11,11 @@ package org.easyas3.vinci.display
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.utils.getTimer;
+	import org.computus.utils.timekeeper.Timekeeper;
+	import org.computus.utils.timekeeper.TimekeeperEvent;
+	import org.easyas3.utils.StringUtil;
+	import org.easyas3.vinci.VinciContext;
 	
 	import org.easyas3.pool.IPoolObject;
 	
@@ -56,19 +61,32 @@ package org.easyas3.vinci.display
 		protected var _using:Boolean;
 		
 		/**
+		 * 帧速率
+		 */
+		protected var _frameRate:Number;
+		
+		/**
+		 * 计时器
+		 * @private
+		 */
+		private var _timekeeper:Timekeeper;
+		
+		/**
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
+		 * @param	frameRate:Number (default = 24.0) — 帧速率
 		 */	
-		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null)
+		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = 10.0)
 		{
 			super();
 			
+			_frameRate = frameRate;
 			_bitmap = new Bitmap();
 			this.frames = frames;
 			initialize();
 			
-			addEventListener(Event.ADDED_TO_STAGE, addedHandler);
-			addEventListener(Event.REMOVED_FROM_STAGE, removedHandler);
+			//添加到渲染队列
+			context.addBitmapMovie(this);
 		}
 		
 		/**
@@ -97,8 +115,6 @@ package org.easyas3.vinci.display
 				_maxIndex = _frames.length - 1;
 				gotoFrameIndex(_currentIndex);
 			}
-			
-			updatePlayStatus();
 		}
 		
 		/**
@@ -178,6 +194,14 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
+		 * 帧数最大索引值
+		 */
+		public function get maxIndex():int 
+		{
+			return _maxIndex;
+		}
+		
+		/**
 		 * 标识对象是否从对象池中取出并正在使用
 		 */
 		public function get using():Boolean 
@@ -194,12 +218,19 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
+		 * 渲染引擎控制器
+		 */
+		protected function get context():VinciContext
+		{
+			return VinciContext.getInstance();
+		}
+		
+		/**
 		 * 播放动画
 		 */
 		public function play():void 
 		{
 			_isPlaying = true;
-			updatePlayStatus();
 		}
 		
 		/**
@@ -208,7 +239,6 @@ package org.easyas3.vinci.display
 		public function stop():void 
 		{
 			_isPlaying = false;
-			updatePlayStatus();
 		}
 		
 		/**
@@ -307,20 +337,13 @@ package org.easyas3.vinci.display
 		{
 			stop();
 			
+			//从渲染控制器里移除自身
+			context.removeBitmapMovie(this);
+			
 			//移除Bitmap对象
 			if (contains(_bitmap))
 			{
 				removeChild(_bitmap);
-			}
-			
-			//移除事件监听
-			removeEventListener(Event.ADDED_TO_STAGE, addedHandler);
-			removeEventListener(Event.REMOVED_FROM_STAGE, removedHandler);
-			
-			//有帧事件监听的话就清除帧事件监听
-			if (hasEventListener(Event.ENTER_FRAME))
-			{
-				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			}
 			
 			_frames = null;
@@ -345,56 +368,6 @@ package org.easyas3.vinci.display
 			_maxIndex = 0;
 			
 			play();
-		}
-		
-		/**
-		 * 更新动画播放状态
-		 */
-		protected function updatePlayStatus():void
-		{
-			if (_isPlaying && _maxIndex != 0 && stage != null)
-			{
-				//播放状态时添加帧事件监听
-				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			}
-			else
-			{
-				//停止状态时移除帧事件监听
-				if (hasEventListener(Event.ENTER_FRAME))
-				{
-					removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-				}
-			}
-		}
-		
-		/**
-		 * 添加到舞台事件监听
-		 * @private
-		 * @param	e:Event — 事件对象
-		 */
-		private function addedHandler(e:Event):void 
-		{
-			updatePlayStatus();
-		}
-		
-		/**
-		 * 移出舞台事件监听
-		 * @private
-		 * @param	e:Event — 事件对象
-		 */
-		private function removedHandler(e:Event):void 
-		{
-			updatePlayStatus();
-		}
-		
-		/**
-		 * 帧事件监听
-		 * @private
-		 * @param	e:Event — 事件对象
-		 */
-		private function enterFrameHandler(e:Event):void 
-		{
-			nextFrame();
 		}
 	}
 }

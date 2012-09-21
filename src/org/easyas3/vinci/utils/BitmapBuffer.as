@@ -256,11 +256,17 @@ package org.easyas3.vinci.utils
 		 * 生成帧序列对象
 		 * @private
 		 * @param	spriteSheetBitmaps:Array — 精灵序列图位图集合
+		 * @param	rowCount:int — 行数
+		 * @param	columnCount:int — 列数
 		 * @param	direction:String — 精灵序列图排列布局
 		 * @return	Vector.<BitmapFrameInfo> — 帧信息队列
 		 */
-		public static function generateFrames(spriteSheetBitmaps:Array, direction:String = "horizontal"):Vector.<BitmapFrameInfo> 
+		public static function generateFrames(spriteSheetBitmaps:Array, rowCount:int, columnCount:int, 
+											  direction:String = "horizontal"):Vector.<BitmapFrameInfo> 
 		{
+			var outsideLoopLength:int;
+			var insideLoopLength:int;
+			var bmpData:BitmapData;
 			var bmpFrameInfo:BitmapFrameInfo;
 			var columnCount:int;
 			var rowCount:int;
@@ -271,16 +277,29 @@ package org.easyas3.vinci.utils
 				return null;
 			}
 			
-			rowCount = spriteSheetBitmaps.length;
 			frames = new Vector.<BitmapFrameInfo>();
 			
-			for (var i:int = 0; i < rowCount; i++) 
+			if (direction == SpriteSheetLayout.HORIZONTAL)
 			{
-				columnCount = (spriteSheetBitmaps[i] as Array).length;
-				
-				for (var j:int = 0; j < columnCount; j++) 
+				outsideLoopLength = rowCount;
+				insideLoopLength = columnCount;
+			}
+			else if (direction == SpriteSheetLayout.VERTICAL)
+			{
+				outsideLoopLength = columnCount;
+				insideLoopLength = rowCount;
+			}
+			else
+			{
+				throw "Wrong direction value !";
+			}
+			
+			for (var i:int = 0; i < outsideLoopLength; i++) 
+			{
+				for (var j:int = 0; j < insideLoopLength; j++) 
 				{
-					bmpFrameInfo = new BitmapFrameInfo(0, 0, spriteSheetBitmaps[i][j]);
+					bmpData = (direction == SpriteSheetLayout.HORIZONTAL)?spriteSheetBitmaps[i][j]:spriteSheetBitmaps[j][i];
+					bmpFrameInfo = new BitmapFrameInfo(0, 0, bmpData);
 					frames.push(bmpFrameInfo);
 				}
 			}

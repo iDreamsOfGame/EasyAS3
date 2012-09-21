@@ -13,11 +13,12 @@ package
 	import flash.filters.GlowFilter;
 	
 	import org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie;
+	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
 	import org.easyas3.vinci.display.SpriteSheetLayout;
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
-	[SWF(width="1300", height="800", frameRate="40", backgroundColor="0x000000")]
+	[SWF(width="1300", height="800", frameRate="10", backgroundColor="0x000000")]
 	public class VinciDemo extends BaseDemo
 	{
 		private var list_mc:Array;
@@ -27,6 +28,11 @@ package
 		public function VinciDemo()
 		{
 			super();
+		}
+		
+		override protected function initialize():void
+		{
+			super.initialize();
 			
 			Fps.setup(this);
 			Fps.visible = true;
@@ -84,15 +90,13 @@ package
 		{
 			
 			var mc:PixelInteractiveSpriteSheetBitmapMovie = evt.target as PixelInteractiveSpriteSheetBitmapMovie;
-			if (mc.scaleX < 1)
+			if (mc.isPlaying)
 			{
-				mc.scaleX = 1;
-				mc.scaleY = 1;
+				mc.stop();
 			}
 			else
 			{
-				mc.scaleX = 0.8;
-				mc.scaleY = 0.8;
+				mc.play();
 				//container.addChild(mc);
 			}
 			
@@ -107,7 +111,8 @@ package
 			while (i < DemoConfig.ItemTypeNumber)
 			{
 				var mc:MovieClip = getItem(i);
-				BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 4, 16, SpriteSheetLayout.HORIZONTAL, true, 0xcccccc));
+				//BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 4, 16, SpriteSheetLayout.HORIZONTAL, true));
+				BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 6, 1, SpriteSheetLayout.VERTICAL, true));
 				i++;
 			}
 		}
@@ -170,8 +175,10 @@ package
 					//mc = new BitmapMovie();
 					//mc.frames = BitmapBuffer.getBitmapFrameInfos(arr_item[strRow][tmpColumn]);
 					var id:int = Math.round(Math.random() * 6);
-					var spriteSheetBitmaps:Array = BitmapBuffer.getSpriteSheetBitmapInfos(id.toString()).spriteSheetBitmaps;
-					mc.frames = BitmapBuffer.generateFrames(spriteSheetBitmaps);
+					var spriteSheetBmpInfo:SpriteSheetBitmapInfo = BitmapBuffer.getSpriteSheetBitmapInfos(id.toString());
+					var spriteSheetBitmaps:Array = spriteSheetBmpInfo.spriteSheetBitmaps;
+					//mc.frames = BitmapBuffer.generateFrames(spriteSheetBitmaps, spriteSheetBmpInfo.row, spriteSheetBmpInfo.column);
+					mc.frames = BitmapBuffer.generateFrames(spriteSheetBitmaps, spriteSheetBmpInfo.row, spriteSheetBmpInfo.column, SpriteSheetLayout.VERTICAL);
 					//mc.stop();
 					list_mc.push(mc);
 					//mc.x = tmpColumn * DemoConfig.ColumnSpace + (Math.random() * 10 - 5);

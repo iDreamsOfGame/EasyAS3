@@ -20,12 +20,12 @@ package org.easyas3.utils
 		/**
 		 * 一个整数值，表示毫秒到秒转换进制
 		 */
-		public static const MSEL_STEP:int = 1000;
+		public static const MSEL_STEP:Number = 1000;
 		
 		/**
 		 * 一个整数值，表示普通时间单位转换进制
 		 */
-		public static const TIME_STEP:int = 60;
+		public static const TIME_STEP:Number = 60;
 		
 		/**
 		 * ASCII 编码格式

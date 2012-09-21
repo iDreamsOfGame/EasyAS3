@@ -12,6 +12,7 @@ package
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
 	
+	import org.easyas3.vinci.VinciContext;
 	import org.easyas3.vinci.display.BitmapFrameInfo;
 	import org.easyas3.vinci.display.BitmapMovie;
 	import org.easyas3.vinci.display.PixelInteractiveBitmapMovie;
@@ -28,6 +29,8 @@ package
 		public function VinciDemo()
 		{
 			super();
+			
+			VinciContext.stage = stage;
 			
 			Fps.setup(this);
 			Fps.visible = true;

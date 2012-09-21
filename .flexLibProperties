@@ -7,6 +7,9 @@
     <classEntry path="org.easyas3.vinci.display.PixelInteractiveBitmapMovieProxy"/>
     <classEntry path="org.easyas3.vinci.display.BitmapMovie"/>
     <classEntry path="org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie"/>
+    <classEntry path="org.easyas3.vinci.VinciContext"/>
+    <classEntry path="org.easyas3.vinci.display.IPixelInteractiveBitmap"/>
+    <classEntry path="org.easyas3.vinci.VinciPixelInteractiveContext"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -12,6 +12,8 @@ package org.easyas3.vinci.display
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	
 	import org.easyas3.utils.ColorUtil;
 	import org.easyas3.vinci.events.PixelMouseEvent;
@@ -76,7 +78,6 @@ package org.easyas3.vinci.display
 			}
 			
 			_bitmapMovie = bitmapMovie;
-			_bitmapMovie.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			
 			for (var key:String in MOUSE_EVENTS) 
 			{
@@ -137,6 +138,11 @@ package org.easyas3.vinci.display
 			}
 			
 			_mouseIn = value;
+			
+			if (_bitmapMovie.buttonMode)
+			{
+				Mouse.cursor = _mouseIn?MouseCursor.BUTTON:MouseCursor.AUTO;
+			}
 			
 			mouseEventType = _mouseIn?PixelMouseEvent.ROLL_OVER:PixelMouseEvent.ROLL_OUT;
 			_bitmapMovie.dispatchEvent(new PixelMouseEvent(mouseEventType, _bitmapMovie.mouseX, _bitmapMovie.mouseY));
@@ -201,9 +207,7 @@ package org.easyas3.vinci.display
 		 */
 		public function dispose():void 
 		{
-			//移除事件监听
-			_bitmapMovie.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			
+			//移除全部事件监听
 			for each (var key:String in MOUSE_EVENTS) 
 			{
 				_bitmapMovie.removeEventListener(key, commonMouseEventHandler);
@@ -221,16 +225,6 @@ package org.easyas3.vinci.display
 			{
 				_bitmapMovie.dispatchEvent(new PixelMouseEvent(MOUSE_EVENTS[e.type], _bitmapMovie.mouseX, _bitmapMovie.mouseY));
 			}
-		}
-		
-		/**
-		 * 帧事件监听
-		 * @private
-		 * @param	e:Event — 事件对象
-		 */
-		private function enterFrameHandler(e:Event):void 
-		{
-			checkMouseInOut();
 		}
 	}
 }
