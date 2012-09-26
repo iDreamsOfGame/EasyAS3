@@ -25,13 +25,14 @@ package org.easyas3.vinci.display
 		/**
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
+		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 */
-		public function PixelInteractiveBitmapMovie(frames:Vector.<BitmapFrameInfo> = null)
+		public function PixelInteractiveBitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN)
 		{
 			_proxy = new PixelInteractiveBitmapMovieProxy(this);
 			_proxy.initialize();
 			
-			super(frames);
+			super(frames, frameRate);
 			
 			pixelInteractiveContext.addPixelInteractiveBitmapMovie(this);
 		}

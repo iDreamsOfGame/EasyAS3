@@ -9,17 +9,18 @@
 package org.easyas3.vinci
 {
 	import flash.display.Stage;
-	import flash.events.Event;
-	import flash.utils.getTimer;
-	import org.easyas3.utils.StringUtil;
-	import org.easyas3.vinci.display.BitmapMovie;
 	
 	/**
 	 * Vinci位图渲染引擎控制器
 	 * @author Jerry 
 	 */	
-	public class VinciContext
+	public class VinciContext implements IRenderer
 	{
+		/**
+		 * 手动设置动画帧频
+		 */
+		public static var frameRate:Number;
+		
 		/**
 		 * 舞台对象
 		 */
@@ -35,19 +36,13 @@ package org.easyas3.vinci
 		 * 位图动画集合
 		 * @private
 		 */
-		private var _movies:Vector.<BitmapMovie>;
+		private var _movies:Vector.<IRenderer>;
 		
 		/**
-		 * 时间差值
+		 * 渲染管理器
 		 * @private
 		 */
-		private var _deltaTime:Number = 0;
-		
-		/**
-		 * 上一次记录时间
-		 * @private
-		 */
-		private var _lastTime:Number = 0;
+		private var _renderManager:VinciRenderManager;
 		
 		/**
 		 * 构造函数
@@ -60,31 +55,15 @@ package org.easyas3.vinci
 				throw "The class is designed by Singleton Pattern, please use getInstance method to get instance of this class. ";
 			}
 			
-			stage.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			_renderManager = new VinciRenderManager(this);
 		}
 		
 		/**
-		 * 帧频
+		 * 帧频，如果手动给frameRate赋值过，则返回之前赋值过的值，否则返回舞台对象的帧频。
 		 */
 		public function get frameRate():Number
 		{
-			return stage?stage.frameRate:24;
-		}
-		
-		/**
-		 * 帧频的一半
-		 */
-		public function get halfFrameRate():Number 
-		{
-			return frameRate >> 1;
-		}
-		
-		/**
-		 * 间隔时间
-		 */
-		public function get intervalTime():uint 
-		{
-			return StringUtil.MSEL_STEP / frameRate;
+			return VinciContext.frameRate?VinciContext.frameRate:(stage?stage.frameRate:24);
 		}
 		
 		/**
@@ -100,11 +79,11 @@ package org.easyas3.vinci
 		 * 添加位图动画到字典中
 		 * @param	bitmapMovie:BitmapMovie — 位图动画对象
 		 */
-		public function addBitmapMovie(bitmapMovie:BitmapMovie):void 
+		public function addBitmapMovie(bitmapMovie:IRenderer):void 
 		{
 			if (_movies == null)
 			{
-				_movies = new Vector.<BitmapMovie>();
+				_movies = new Vector.<IRenderer>();
 			}
 			
 			_movies.push(bitmapMovie);
@@ -114,7 +93,7 @@ package org.easyas3.vinci
 		 * 从字典中移除位图动画
 		 * @param	bitmapMovie
 		 */
-		public function removeBitmapMovie(bitmapMovie:BitmapMovie):void 
+		public function removeBitmapMovie(bitmapMovie:IRenderer):void 
 		{
 			_movies.splice(_movies.indexOf(bitmapMovie), 1);
 		}
@@ -124,7 +103,8 @@ package org.easyas3.vinci
 		 */
 		public function dispose():void 
 		{
-			stage.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			_renderManager.dispose();
+			_renderManager = null;
 			
 			_movies = null;
 			
@@ -132,49 +112,13 @@ package org.easyas3.vinci
 		}
 		
 		/**
-		 * 帧事件监听
-		 * @private
-		 * @param	e:Event — 事件对象
-		 */
-		private function enterFrameHandler(e:Event):void 
-		{
-			var realFrame:uint;
-			var tweenFrames:uint;
-			var nowTime:uint = getTimer();
-			
-			_deltaTime = nowTime - _lastTime;
-			_lastTime = nowTime;
-			realFrame = uint(StringUtil.MSEL_STEP / _deltaTime);			//上一帧的实际帧频
-			
-			if (realFrame >= halfFrameRate)
-			{
-				//正常播放
-				render();
-			}
-			else
-			{
-				//补帧
-				tweenFrames = frameRate / realFrame;
-				
-				for (var i:int = 0; i < tweenFrames; i++) 
-				{
-					render();
-				}
-			}
-		}
-		
-		/**
 		 * 渲染动画
-		 * @private
 		 */
-		private function render():void 
+		public function render():void 
 		{
-			for each (var movie:BitmapMovie in _movies) 
+			for each (var movie:IRenderer in _movies) 
 			{
-				if (movie.isPlaying && movie.maxIndex)
-				{
-					movie.nextFrame();
-				}
+				movie.render();
 			}
 		}
 	}

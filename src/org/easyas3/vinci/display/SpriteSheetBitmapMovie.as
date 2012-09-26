@@ -28,28 +28,17 @@ package org.easyas3.vinci.display
 		protected var _direction:String;
 		
 		/**
-		 * 组内播放模式
-		 */
-		protected var _groupPlayMode:Boolean;
-		
-		/**
-		 * 组索引
-		 */
-		protected var _groupIndex:int;
-		
-		/**
 		 * 构造函数
 		 * @param	spriteSheetBmpInfo:SpriteSheetBitmapInfo — 精灵序列图位图数据信息
-		 * @param	direction:String — 精灵序列图布局方向
-		 * @param	groupPalyMode:Boolean — 组内播放模式，如果为true则可实现组内播放，如果为false则使用默认的循环播放方式
+		 * @param	frameRate:Number (default = NaN) — 帧速率
+		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
 		 */
-		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, direction = "horizontal", groupPalyMode:Boolean = false)
+		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal")
 		{
 			_spriteSheetBmpInfo = spriteSheetBmpInfo;
 			_direction = direction;
-			_groupPlayMode = groupPalyMode;
 			 
-			super(BitmapBuffer.generateFrames(spriteSheetBitmaps, row, column, direction));
+			super(BitmapBuffer.generateFrames(spriteSheetBitmaps, row, column, direction), frameRate);
 		}
 		
 		/**
@@ -58,7 +47,7 @@ package org.easyas3.vinci.display
 		 */
 		override public function clone():IPoolObject
 		{
-			return new SpriteSheetBitmapMovie(_spriteSheetBmpInfo, _direction, _groupPlayMode);
+			return new SpriteSheetBitmapMovie(_spriteSheetBmpInfo, _frameRate, _direction);
 		}
 		
 		/**
@@ -67,32 +56,6 @@ package org.easyas3.vinci.display
 		public function get direction():String 
 		{
 			return _direction;
-		}
-		
-		/**
-		 * 组内播放模式
-		 */
-		public function get groupPlayMode():Boolean 
-		{
-			return _groupPlayMode;
-		}
-		
-		/**
-		 * 组索引
-		 */
-		public function get groupIndex():int 
-		{
-			return _groupIndex;
-		}
-		
-		/**
-		 * 组索引
-		 */
-		public function set groupIndex(value:int):void 
-		{
-			_groupIndex = value;
-			
-			//播放该组内容
 		}
 		
 		/**

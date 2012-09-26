@@ -11,6 +11,8 @@ package
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	
 	import org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie;
 	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
@@ -18,7 +20,7 @@ package
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
-	[SWF(width="1300", height="800", frameRate="10", backgroundColor="0x000000")]
+	[SWF(width="1300", height="800", frameRate="24", backgroundColor="0x000000")]
 	public class VinciDemo extends BaseDemo
 	{
 		private var list_mc:Array;
@@ -44,7 +46,7 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveSpriteSheetBitmapMovie = new PixelInteractiveSpriteSheetBitmapMovie();
+				var mc:PixelInteractiveSpriteSheetBitmapMovie = new PixelInteractiveSpriteSheetBitmapMovie(null, 12);
 				mc.rollEnabled = true;
 				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);
@@ -73,14 +75,13 @@ package
 		
 		private function mcPixelRollOver(evt:MouseEvent):void
 		{
-			
+			Mouse.cursor = MouseCursor.BUTTON;
 			(evt.target as PixelInteractiveSpriteSheetBitmapMovie).filters = mcFilters;
-			
 		}
 		
 		private function mcPixelRollOut(evt:MouseEvent):void
 		{
-			
+			Mouse.cursor = MouseCursor.AUTO;
 			var mc:PixelInteractiveSpriteSheetBitmapMovie = evt.target as PixelInteractiveSpriteSheetBitmapMovie;
 			mc.filters = null;
 			
@@ -112,7 +113,7 @@ package
 			{
 				var mc:MovieClip = getItem(i);
 				//BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 4, 16, SpriteSheetLayout.HORIZONTAL, true));
-				BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 6, 1, SpriteSheetLayout.VERTICAL, true));
+				BitmapBuffer.storeSpriteSheetBitmapInfos(String(i), BitmapBuffer.cacheSpriteSheet(mc, 0, 0, 12, 1, SpriteSheetLayout.VERTICAL, true));
 				i++;
 			}
 		}

@@ -73,6 +73,7 @@ package
 		
 		protected function initialize():void
 		{
+			VinciContext.frameRate = 12;
 			VinciContext.stage = stage;
 		}
 		

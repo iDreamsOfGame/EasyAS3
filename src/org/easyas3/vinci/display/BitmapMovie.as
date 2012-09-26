@@ -10,20 +10,16 @@ package org.easyas3.vinci.display
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.utils.getTimer;
-	import org.computus.utils.timekeeper.Timekeeper;
-	import org.computus.utils.timekeeper.TimekeeperEvent;
-	import org.easyas3.utils.StringUtil;
-	import org.easyas3.vinci.VinciContext;
-	
 	import org.easyas3.pool.IPoolObject;
+	import org.easyas3.vinci.IRenderer;
+	import org.easyas3.vinci.VinciContext;
+	import org.easyas3.vinci.VinciRenderManager;
 	
 	/**
 	 * 位图动画基类
 	 * @author Jerry 
 	 */	
-	public class BitmapMovie extends Sprite implements IPoolObject
+	public class BitmapMovie extends Sprite implements IPoolObject, IRenderer
 	{
 		/**
 		 * 位图动画帧信息序列
@@ -66,17 +62,17 @@ package org.easyas3.vinci.display
 		protected var _frameRate:Number;
 		
 		/**
-		 * 计时器
+		 * 渲染管理器
 		 * @private
 		 */
-		private var _timekeeper:Timekeeper;
+		private var _renderManager:VinciRenderManager;
 		
 		/**
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
-		 * @param	frameRate:Number (default = 24.0) — 帧速率
+		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 */	
-		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = 10.0)
+		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN)
 		{
 			super();
 			
@@ -85,8 +81,16 @@ package org.easyas3.vinci.display
 			this.frames = frames;
 			initialize();
 			
-			//添加到渲染队列
-			context.addBitmapMovie(this);
+			//判断是否独立渲染
+			if (frameRate)
+			{
+				_renderManager = new VinciRenderManager(this);
+			}
+			else
+			{
+				//添加到渲染队列
+				context.addBitmapMovie(this);
+			}
 		}
 		
 		/**
@@ -194,14 +198,6 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 帧数最大索引值
-		 */
-		public function get maxIndex():int 
-		{
-			return _maxIndex;
-		}
-		
-		/**
 		 * 标识对象是否从对象池中取出并正在使用
 		 */
 		public function get using():Boolean 
@@ -215,6 +211,14 @@ package org.easyas3.vinci.display
 		public function set using(value:Boolean):void 
 		{
 			_using = value;
+		}
+		
+		/**
+		 * 帧频
+		 */
+		public function get frameRate():Number 
+		{
+			return _frameRate;
 		}
 		
 		/**
@@ -314,12 +318,23 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
+		 * 渲染
+		 */
+		public function render():void 
+		{
+			if (_isPlaying && _maxIndex != 0 && stage != null)
+			{
+				nextFrame();
+			}
+		}
+		
+		/**
 		 * 克隆对象
 		 * @return IPoolObject — 对象池接口对象
 		 */
 		public function clone():IPoolObject
 		{
-			return new BitmapMovie(_frames);
+			return new BitmapMovie(_frames, _frameRate);
 		}
 		
 		/**
@@ -336,6 +351,13 @@ package org.easyas3.vinci.display
 		public function dispose():void 
 		{
 			stop();
+			
+			//渲染管理器销毁
+			if (_renderManager)
+			{
+				_renderManager.dispose();
+				_renderManager = null;
+			}
 			
 			//从渲染控制器里移除自身
 			context.removeBitmapMovie(this);

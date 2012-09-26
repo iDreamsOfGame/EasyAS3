@@ -24,13 +24,15 @@ package org.easyas3.vinci.display
 		/**
 		 * 构造函数
 		 * @param	spriteSheetBmpInfo:SpriteSheetBitmapInfo — 精灵序列图位图数据信息
+		 * @param	frameRate:Number (default = NaN) — 帧速率
+		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
 		 */
-		public function PixelInteractiveSpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null)
+		public function PixelInteractiveSpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal")
 		{
 			_proxy = new PixelInteractiveBitmapMovieProxy(this);
 			_proxy.initialize();
 			
-			super(spriteSheetBmpInfo);
+			super(spriteSheetBmpInfo, frameRate, direction);
 			
 			pixelInteractiveContext.addPixelInteractiveBitmapMovie(this);
 		}
