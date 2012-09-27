@@ -26,13 +26,14 @@ package org.easyas3.vinci.display
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
 		 * @param	frameRate:Number (default = NaN) — 帧速率
+		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */
-		public function PixelInteractiveBitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN)
+		public function PixelInteractiveBitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN, centerPointPosition:String = "center")
 		{
 			_proxy = new PixelInteractiveBitmapMovieProxy(this);
 			_proxy.initialize();
 			
-			super(frames, frameRate);
+			super(frames, frameRate, centerPointPosition);
 			
 			pixelInteractiveContext.addPixelInteractiveBitmapMovie(this);
 		}

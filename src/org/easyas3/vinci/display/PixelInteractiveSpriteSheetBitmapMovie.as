@@ -9,6 +9,7 @@
 package org.easyas3.vinci.display
 {
 	import org.easyas3.vinci.VinciPixelInteractiveContext;
+	
 	/**
 	 * 像素级精灵序列图位图动画
 	 * @author Jerry 
@@ -26,13 +27,14 @@ package org.easyas3.vinci.display
 		 * @param	spriteSheetBmpInfo:SpriteSheetBitmapInfo — 精灵序列图位图数据信息
 		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
+		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */
-		public function PixelInteractiveSpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal")
+		public function PixelInteractiveSpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal", centerPointPosition:String = "center")
 		{
 			_proxy = new PixelInteractiveBitmapMovieProxy(this);
 			_proxy.initialize();
 			
-			super(spriteSheetBmpInfo, frameRate, direction);
+			super(spriteSheetBmpInfo, frameRate, direction, centerPointPosition);
 			
 			pixelInteractiveContext.addPixelInteractiveBitmapMovie(this);
 		}

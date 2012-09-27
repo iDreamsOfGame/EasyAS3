@@ -14,6 +14,7 @@ package
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
+	import org.easyas3.vinci.display.BitmapMovieCenterPointPosition;
 	import org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie;
 	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
 	import org.easyas3.vinci.display.SpriteSheetLayout;
@@ -46,7 +47,8 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveSpriteSheetBitmapMovie = new PixelInteractiveSpriteSheetBitmapMovie(null, 12);
+				var mc:PixelInteractiveSpriteSheetBitmapMovie = new PixelInteractiveSpriteSheetBitmapMovie(null, 12, SpriteSheetLayout.HORIZONTAL, 
+					BitmapMovieCenterPointPosition.TOP_LEFT);
 				mc.rollEnabled = true;
 				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);

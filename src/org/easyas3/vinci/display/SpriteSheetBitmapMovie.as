@@ -32,13 +32,14 @@ package org.easyas3.vinci.display
 		 * @param	spriteSheetBmpInfo:SpriteSheetBitmapInfo — 精灵序列图位图数据信息
 		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
+		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */
-		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal")
+		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal", centerPointPosition:String = "center")
 		{
 			_spriteSheetBmpInfo = spriteSheetBmpInfo;
 			_direction = direction;
 			 
-			super(BitmapBuffer.generateFrames(spriteSheetBitmaps, row, column, direction), frameRate);
+			super(BitmapBuffer.generateFrames(spriteSheetBitmaps, row, column, direction), frameRate, centerPointPosition);
 		}
 		
 		/**

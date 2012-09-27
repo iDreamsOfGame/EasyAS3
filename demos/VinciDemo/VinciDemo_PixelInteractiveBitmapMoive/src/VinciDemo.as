@@ -11,6 +11,8 @@ package
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	
 	import org.easyas3.vinci.VinciContext;
 	import org.easyas3.vinci.display.BitmapFrameInfo;
@@ -19,7 +21,7 @@ package
 	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
-	[SWF(width="1300", height="800", frameRate="40")]
+	[SWF(width="1300", height="800", frameRate="25")]
 	public class VinciDemo extends BaseDemo
 	{
 		private var list_mc:Array;
@@ -42,7 +44,7 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveBitmapMovie = new PixelInteractiveBitmapMovie();
+				var mc:PixelInteractiveBitmapMovie = new PixelInteractiveBitmapMovie(null, 16);
 				mc.rollEnabled = true;
 				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);
@@ -71,14 +73,14 @@ package
 		
 		private function mcPixelRollOver(evt:MouseEvent):void
 		{
-			
+			Mouse.cursor = MouseCursor.BUTTON;
 			(evt.target as BitmapMovie).filters = mcFilters;
 			
 		}
 		
 		private function mcPixelRollOut(evt:MouseEvent):void
 		{
-			
+			Mouse.cursor = MouseCursor.AUTO;
 			var mc:BitmapMovie = evt.target as BitmapMovie;
 			mc.filters = null;
 			

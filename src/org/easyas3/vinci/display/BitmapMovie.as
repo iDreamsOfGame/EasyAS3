@@ -10,6 +10,7 @@ package org.easyas3.vinci.display
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	import org.easyas3.pool.IPoolObject;
 	import org.easyas3.vinci.IRenderer;
 	import org.easyas3.vinci.VinciContext;
@@ -62,6 +63,11 @@ package org.easyas3.vinci.display
 		protected var _frameRate:Number;
 		
 		/**
+		 * 中心点位置
+		 */
+		protected var _centerPointPosition:String;
+		
+		/**
 		 * 渲染管理器
 		 * @private
 		 */
@@ -71,12 +77,14 @@ package org.easyas3.vinci.display
 		 * 构造函数
 		 * @param	frames:Vector.<BitmapFrameInfo> (default = null) — 位图动画帧信息序列
 		 * @param	frameRate:Number (default = NaN) — 帧速率
+		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */	
-		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN)
+		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN, centerPointPosition:String = "center")
 		{
 			super();
 			
 			_frameRate = frameRate;
+			_centerPointPosition = centerPointPosition;
 			_bitmap = new Bitmap();
 			this.frames = frames;
 			initialize();
@@ -296,6 +304,7 @@ package org.easyas3.vinci.display
 		 */
 		public function gotoFrameIndex(index:int):void 
 		{
+			var bmpCenterPos:Point;
 			var bmpFrameInfo:BitmapFrameInfo;
 			
 			_currentIndex = index;
@@ -315,6 +324,11 @@ package org.easyas3.vinci.display
 			_bitmap.bitmapData = bmpFrameInfo.bitmapData;
 			_bitmap.x = bmpFrameInfo.x;
 			_bitmap.y = bmpFrameInfo.y;
+			
+			//根据中心点坐标计算坐标
+			bmpCenterPos = BitmapMovieCenterPointPosition[_centerPointPosition](_bitmap.bitmapData.width, _bitmap.bitmapData.height);
+			_bitmap.x += bmpCenterPos.x;
+			_bitmap.y += bmpCenterPos.y;
 		}
 		
 		/**
