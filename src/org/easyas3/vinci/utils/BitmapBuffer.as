@@ -17,8 +17,8 @@ package org.easyas3.vinci.utils
 	
 	import org.easyas3.utils.DisplayObjectUtil;
 	import org.easyas3.utils.MathUtil;
-	import org.easyas3.vinci.display.BitmapFrameInfo;
-	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
+	import org.easyas3.vinci.display.BitmapFrame;
+	import org.easyas3.vinci.display.SpriteSheetBitmap;
 	import org.easyas3.vinci.display.SpriteSheetLayout;
 	
 	/**
@@ -44,7 +44,7 @@ package org.easyas3.vinci.utils
 		 * @param	id:String — 位图帧信息序列标识
 		 * @param	data:Vector.<BitmapFrameInfo> — 位图帧信息序列
 		 */
-		public static function storeBitmapFrameInfos(id:String, data:Vector.<BitmapFrameInfo>):void 
+		public static function storeBitmapFrameInfos(id:String, data:Vector.<BitmapFrame>):void 
 		{
 			storeMapData(id, data);
 		}
@@ -54,7 +54,7 @@ package org.easyas3.vinci.utils
 		 * @param	id:String — 位图帧信息序列标识
 		 * @return	Vector.<BitmapFrameInfo> — 位图帧信息序列
 		 */
-		public static function getBitmapFrameInfos(id:String):Vector.<BitmapFrameInfo> 
+		public static function getBitmapFrameInfos(id:String):Vector.<BitmapFrame> 
 		{
 			return _mapData[id];
 		}
@@ -64,7 +64,7 @@ package org.easyas3.vinci.utils
 		 * @param	id:String — 精灵序列图信息序列标识
 		 * @param	data:SpriteSheetBitmapInfo — 精灵位图动画信息
 		 */
-		public static function storeSpriteSheetBitmapInfos(id:String, data:SpriteSheetBitmapInfo):void 
+		public static function storeSpriteSheetBitmapInfos(id:String, data:SpriteSheetBitmap):void 
 		{
 			storeMapData(id, data);
 		}
@@ -74,7 +74,7 @@ package org.easyas3.vinci.utils
 		 * @param	id:String — 精灵序列图信息序列标识
 		 * @return	SpriteSheetBitmapInfo — 精灵位图动画信息
 		 */
-		public static function getSpriteSheetBitmapInfos(id:String):SpriteSheetBitmapInfo
+		public static function getSpriteSheetBitmapInfos(id:String):SpriteSheetBitmap
 		{
 			return _mapData[id];
 		}
@@ -88,12 +88,12 @@ package org.easyas3.vinci.utils
 		 * @return BitmapFrameInfo — 缓存成位图的帧信息
 		 */
 		public static function cacheBitmap(source:DisplayObject, transparent:Boolean = true, fillColor:uint = 0x00000000,
-										   scale:Number = 1):BitmapFrameInfo
+										   scale:Number = 1):BitmapFrame
 		{
 			var bitmapData:BitmapData;
 			var validRect:Rectangle;
 			var validBitmapData:BitmapData;
-			var bitmapFrameInfo:BitmapFrameInfo;
+			var bitmapFrameInfo:BitmapFrame;
 			var rect:Rectangle = source.getBounds(source);
 			var x:int = Math.round(rect.x * scale);
 			var y:int = Math.round(rect.y * scale);
@@ -125,7 +125,7 @@ package org.easyas3.vinci.utils
 			}
 			
 			//构造位图帧信息数据
-			bitmapFrameInfo = new BitmapFrameInfo(x, y, bitmapData);
+			bitmapFrameInfo = new BitmapFrame(x, y, bitmapData);
 			
 			return bitmapFrameInfo;
 		}
@@ -139,26 +139,26 @@ package org.easyas3.vinci.utils
 		 * @return Vector.<BitmapFrameInfo> — 缓存成位图的帧信息序列
 		 */
 		public static function cacheBitmapMovieClip(source:DisplayObject, transparent:Boolean = true, 
-													fillColor:uint = 0x00000000, scale:Number = 1):Vector.<BitmapFrameInfo> 
+													fillColor:uint = 0x00000000, scale:Number = 1):Vector.<BitmapFrame> 
 		{
 			var mcChildren:Array;
 			var mcNumChildren:int;
 			var mcTotalFrames:int;
 			var mcChild:MovieClip;
 			var mc:MovieClip = source as MovieClip;
-			var bitmapFrameInfos:Vector.<BitmapFrameInfo>;
+			var bitmapFrameInfos:Vector.<BitmapFrame>;
 			
 			if (mc == null)
 			{
 				//不是影片剪辑对象
-				bitmapFrameInfos = new Vector.<BitmapFrameInfo>(1, true);
+				bitmapFrameInfos = new Vector.<BitmapFrame>(1, true);
 				bitmapFrameInfos[0] = cacheBitmap(source, transparent, fillColor, scale);
 			}
 			else
 			{
 				mcTotalFrames = mc.totalFrames;
 				mc.gotoAndStop(1);
-				bitmapFrameInfos = new Vector.<BitmapFrameInfo>(mcTotalFrames, true);
+				bitmapFrameInfos = new Vector.<BitmapFrame>(mcTotalFrames, true);
 				
 				for (var i:int = 0; i < mcTotalFrames; i++) 
 				{
@@ -196,10 +196,10 @@ package org.easyas3.vinci.utils
 		 */
 		public static function cacheSpriteSheet(source:DisplayObject, spriteWidth:int = 0, spriteHeight:int = 0, rowCount:int = 0, columnCount:int = 0, 
 												direction:String = SpriteSheetLayout.HORIZONTAL, transparent:Boolean = true, fillColor:uint = 0x00000000, 
-												scale:Number = 1.0):SpriteSheetBitmapInfo 
+												scale:Number = 1.0):SpriteSheetBitmap 
 		{
 			var bmpData:BitmapData;
-			var spriteSheetBmpInfo:SpriteSheetBitmapInfo;
+			var spriteSheetBmpInfo:SpriteSheetBitmap;
 			var spriteSheetBitmaps:Array;
 			
 			//获取整张图片的范围
@@ -240,7 +240,7 @@ package org.easyas3.vinci.utils
 			}
 			
 			//存储精灵序列表对象数据
-			spriteSheetBmpInfo = new SpriteSheetBitmapInfo();
+			spriteSheetBmpInfo = new SpriteSheetBitmap();
 			spriteSheetBmpInfo.row = rowCount;
 			spriteSheetBmpInfo.column = columnCount;
 			spriteSheetBmpInfo.validWidth = validWidth;
@@ -262,22 +262,22 @@ package org.easyas3.vinci.utils
 		 * @return	Vector.<BitmapFrameInfo> — 帧信息队列
 		 */
 		public static function generateFrames(spriteSheetBitmaps:Array, rowCount:int, columnCount:int, 
-											  direction:String = "horizontal"):Vector.<BitmapFrameInfo> 
+											  direction:String = "horizontal"):Vector.<BitmapFrame> 
 		{
 			var outsideLoopLength:int;
 			var insideLoopLength:int;
 			var bmpData:BitmapData;
-			var bmpFrameInfo:BitmapFrameInfo;
+			var bmpFrameInfo:BitmapFrame;
 			var columnCount:int;
 			var rowCount:int;
-			var frames:Vector.<BitmapFrameInfo>;
+			var frames:Vector.<BitmapFrame>;
 			
 			if(spriteSheetBitmaps == null)
 			{
 				return null;
 			}
 			
-			frames = new Vector.<BitmapFrameInfo>();
+			frames = new Vector.<BitmapFrame>();
 			
 			if (direction == SpriteSheetLayout.HORIZONTAL)
 			{
@@ -299,7 +299,7 @@ package org.easyas3.vinci.utils
 				for (var j:int = 0; j < insideLoopLength; j++) 
 				{
 					bmpData = (direction == SpriteSheetLayout.HORIZONTAL)?spriteSheetBitmaps[i][j]:spriteSheetBitmaps[j][i];
-					bmpFrameInfo = new BitmapFrameInfo(0, 0, bmpData);
+					bmpFrameInfo = new BitmapFrame(0, 0, bmpData);
 					frames.push(bmpFrameInfo);
 				}
 			}

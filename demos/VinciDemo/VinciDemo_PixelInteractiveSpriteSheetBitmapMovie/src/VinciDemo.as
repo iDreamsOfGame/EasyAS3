@@ -14,11 +14,11 @@ package
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
+	import org.easyas3.vinci.display.BitmapMovie;
 	import org.easyas3.vinci.display.BitmapMovieCenterPointPosition;
-	import org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie;
-	import org.easyas3.vinci.display.SpriteSheetBitmapInfo;
+	import org.easyas3.vinci.display.SpriteSheetBitmap;
+	import org.easyas3.vinci.display.SpriteSheetBitmapMovie;
 	import org.easyas3.vinci.display.SpriteSheetLayout;
-	import org.easyas3.vinci.events.PixelMouseEvent;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
 	[SWF(width="1300", height="800", frameRate="24", backgroundColor="0x000000")]
@@ -47,14 +47,11 @@ package
 			while (i < c) 
 			{
 				
-				var mc:PixelInteractiveSpriteSheetBitmapMovie = new PixelInteractiveSpriteSheetBitmapMovie(null, 12, SpriteSheetLayout.HORIZONTAL, 
+				var mc:SpriteSheetBitmapMovie = new SpriteSheetBitmapMovie(null, 12, SpriteSheetLayout.HORIZONTAL, 
 					BitmapMovieCenterPointPosition.TOP_LEFT);
-				mc.rollEnabled = true;
-				mc.addEventListener(PixelMouseEvent.ROLL_OVER, mcPixelRollOver);
-				mc.addEventListener(PixelMouseEvent.ROLL_OUT, mcPixelRollOut);
-				mc.addEventListener(PixelMouseEvent.CLICK, mcClick);
-				//mc.addEventListener(MouseEvent.ROLL_OVER, mcRollOver);
-				//mc.addEventListener(MouseEvent.ROLL_OUT, mcRollOut);
+				mc.addEventListener(MouseEvent.ROLL_OVER, mcPixelRollOver);
+				mc.addEventListener(MouseEvent.ROLL_OUT, mcPixelRollOut);
+				mc.addEventListener(MouseEvent.CLICK, mcClick);
 				pool.push(mc);
 				i++;
 			}
@@ -66,25 +63,25 @@ package
 		
 		private function mcRollOver(e:MouseEvent):void 
 		{
-			(e.target as PixelInteractiveSpriteSheetBitmapMovie).filters = mcFilters;
+			(e.target as BitmapMovie).filters = mcFilters;
 		}
 		
 		private function mcRollOut(e:MouseEvent):void 
 		{
-			var mc:PixelInteractiveSpriteSheetBitmapMovie = e.target as PixelInteractiveSpriteSheetBitmapMovie;
+			var mc:BitmapMovie = e.target as BitmapMovie;
 			mc.filters = null;
 		}
 		
 		private function mcPixelRollOver(evt:MouseEvent):void
 		{
 			Mouse.cursor = MouseCursor.BUTTON;
-			(evt.target as PixelInteractiveSpriteSheetBitmapMovie).filters = mcFilters;
+			(evt.target as BitmapMovie).filters = mcFilters;
 		}
 		
 		private function mcPixelRollOut(evt:MouseEvent):void
 		{
 			Mouse.cursor = MouseCursor.AUTO;
-			var mc:PixelInteractiveSpriteSheetBitmapMovie = evt.target as PixelInteractiveSpriteSheetBitmapMovie;
+			var mc:BitmapMovie = evt.target as BitmapMovie;
 			mc.filters = null;
 			
 		}
@@ -92,7 +89,7 @@ package
 		private function mcClick(evt:MouseEvent):void
 		{
 			
-			var mc:PixelInteractiveSpriteSheetBitmapMovie = evt.target as PixelInteractiveSpriteSheetBitmapMovie;
+			var mc:BitmapMovie = evt.target as BitmapMovie;
 			if (mc.isPlaying)
 			{
 				mc.stop();
@@ -172,13 +169,13 @@ package
 				var tmpColumn:int = strColumn;
 				while (tmpColumn < endColumn)
 				{
-					var mc:PixelInteractiveSpriteSheetBitmapMovie;
+					var mc:BitmapMovie;
 					mc = pool.pop();
 					//mc = pool.getObj();
 					//mc = new BitmapMovie();
 					//mc.frames = BitmapBuffer.getBitmapFrameInfos(arr_item[strRow][tmpColumn]);
 					var id:int = Math.round(Math.random() * 6);
-					var spriteSheetBmpInfo:SpriteSheetBitmapInfo = BitmapBuffer.getSpriteSheetBitmapInfos(id.toString());
+					var spriteSheetBmpInfo:SpriteSheetBitmap = BitmapBuffer.getSpriteSheetBitmapInfos(id.toString());
 					var spriteSheetBitmaps:Array = spriteSheetBmpInfo.spriteSheetBitmaps;
 					//mc.frames = BitmapBuffer.generateFrames(spriteSheetBitmaps, spriteSheetBmpInfo.row, spriteSheetBmpInfo.column);
 					mc.frames = BitmapBuffer.generateFrames(spriteSheetBitmaps, spriteSheetBmpInfo.row, spriteSheetBmpInfo.column, SpriteSheetLayout.VERTICAL);

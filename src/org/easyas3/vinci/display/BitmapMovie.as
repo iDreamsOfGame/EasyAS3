@@ -9,8 +9,9 @@
 package org.easyas3.vinci.display
 {
 	import flash.display.Bitmap;
-	import flash.display.Sprite;
 	import flash.geom.Point;
+	
+	import org.easyas3.display.pixel.PixelInteractiveSprite;
 	import org.easyas3.pool.IPoolObject;
 	import org.easyas3.vinci.IRenderer;
 	import org.easyas3.vinci.VinciContext;
@@ -20,12 +21,12 @@ package org.easyas3.vinci.display
 	 * 位图动画基类
 	 * @author Jerry 
 	 */	
-	public class BitmapMovie extends Sprite implements IPoolObject, IRenderer
+	public class BitmapMovie extends PixelInteractiveSprite implements IPoolObject, IRenderer
 	{
 		/**
 		 * 位图动画帧信息序列
 		 */
-		protected var _frames:Vector.<BitmapFrameInfo>;
+		protected var _frames:Vector.<BitmapFrame>;
 		
 		/**
 		 * 自定义数据
@@ -79,7 +80,7 @@ package org.easyas3.vinci.display
 		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */	
-		public function BitmapMovie(frames:Vector.<BitmapFrameInfo> = null, frameRate:Number = NaN, centerPointPosition:String = "center")
+		public function BitmapMovie(frames:Vector.<BitmapFrame> = null, frameRate:Number = NaN, centerPointPosition:String = "center")
 		{
 			super();
 			
@@ -104,7 +105,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 位图动画帧信息序列
 		 */
-		public function get frames():Vector.<BitmapFrameInfo> 
+		public function get frames():Vector.<BitmapFrame> 
 		{
 			return _frames;
 		}
@@ -112,7 +113,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 位图动画帧信息序列
 		 */
-		public function set frames(value:Vector.<BitmapFrameInfo>):void 
+		public function set frames(value:Vector.<BitmapFrame>):void 
 		{
 			_frames = value;
 			_bitmap.bitmapData = null;
@@ -149,7 +150,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 当前位图帧信息
 		 */
-		public function get currentBitmapFrameInfo():BitmapFrameInfo
+		public function get currentBitmapFrameInfo():BitmapFrame
 		{
 			return _frames?_frames[_currentIndex]:null;
 		}
@@ -305,7 +306,7 @@ package org.easyas3.vinci.display
 		public function gotoFrameIndex(index:int):void 
 		{
 			var bmpCenterPos:Point;
-			var bmpFrameInfo:BitmapFrameInfo;
+			var bmpFrameInfo:BitmapFrame;
 			
 			_currentIndex = index;
 			
@@ -348,7 +349,7 @@ package org.easyas3.vinci.display
 		 */
 		public function clone():IPoolObject
 		{
-			return new BitmapMovie(_frames, _frameRate);
+			return new BitmapMovie(_frames, _frameRate, _centerPointPosition);
 		}
 		
 		/**

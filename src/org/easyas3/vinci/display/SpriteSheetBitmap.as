@@ -14,7 +14,7 @@ package org.easyas3.vinci.display
 	 * Sprite Sheet位图信息
 	 * @author Jerry 
 	 */	
-	public class SpriteSheetBitmapInfo
+	public class SpriteSheetBitmap
 	{
 		/**
 		 * 行数
@@ -61,7 +61,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 构造函数 
 		 */		
-		public function SpriteSheetBitmapInfo()
+		public function SpriteSheetBitmap()
 		{
 			
 		}

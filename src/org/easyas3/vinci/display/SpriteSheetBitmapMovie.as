@@ -20,7 +20,7 @@ package org.easyas3.vinci.display
 		/**
 		 * 精灵序列图位图数据信息
 		 */
-		protected var _spriteSheetBmpInfo:SpriteSheetBitmapInfo;
+		protected var _spriteSheetBmpInfo:SpriteSheetBitmap;
 		
 		/**
 		 * 精灵序列图布局方向
@@ -29,12 +29,13 @@ package org.easyas3.vinci.display
 		
 		/**
 		 * 构造函数
-		 * @param	spriteSheetBmpInfo:SpriteSheetBitmapInfo — 精灵序列图位图数据信息
+		 * @param	spriteSheetBmpInfo:SpriteSheetBitmap — 精灵序列图位图数据信息
 		 * @param	frameRate:Number (default = NaN) — 帧速率
 		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
 		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */
-		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmapInfo = null, frameRate:Number = NaN, direction = "horizontal", centerPointPosition:String = "center")
+		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmap = null, frameRate:Number = NaN, direction = "horizontal", 
+											   centerPointPosition:String = "center")
 		{
 			_spriteSheetBmpInfo = spriteSheetBmpInfo;
 			_direction = direction;
@@ -43,12 +44,16 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 克隆对象方法
-		 * @return	IPoolObject 对象池对象
+		 * 精灵序列图位图数据信息
 		 */
-		override public function clone():IPoolObject
+		public function set spriteSheetBmpInfo(value:SpriteSheetBitmap):void 
 		{
-			return new SpriteSheetBitmapMovie(_spriteSheetBmpInfo, _frameRate, _direction);
+			_spriteSheetBmpInfo = value;
+			
+			if (_spriteSheetBmpInfo)
+			{
+				frames = BitmapBuffer.generateFrames(spriteSheetBitmaps, row, column, direction)
+			}
 		}
 		
 		/**
@@ -81,6 +86,15 @@ package org.easyas3.vinci.display
 		public function get column():int 
 		{
 			return _spriteSheetBmpInfo?_spriteSheetBmpInfo.column:0;
+		}
+		
+		/**
+		 * 克隆对象方法
+		 * @return	IPoolObject 对象池对象
+		 */
+		override public function clone():IPoolObject
+		{
+			return new SpriteSheetBitmapMovie(_spriteSheetBmpInfo, _frameRate, _direction);
 		}
 	}
 }

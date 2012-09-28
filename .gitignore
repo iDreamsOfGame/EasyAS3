@@ -3,3 +3,6 @@
 /bin
 /demos/VinciDemo/bin-debug
 /demos/VinciDemo/VinciDemo_PixelInteractiveBitmapMoive/bin-debug
+/demos/VinciDemo/VinciDemo_PixelInteractiveBitmapMoive/html-template
+/demos/VinciDemo/VinciDemo_PixelInteractiveSpriteSheetBitmapMovie/html-template
+/demos/VinciDemo/VinciDemo_SpriteSheetGroupPlay/html-template

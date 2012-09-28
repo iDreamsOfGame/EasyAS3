@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="org.easyas3.vinci.display.SpriteSheetBitmapInfo"/>
+    <classEntry path="org.easyas3.vinci.display.SpriteSheetBitmap"/>
     <classEntry path="org.easyas3.vinci.display.SpriteSheetLayout"/>
     <classEntry path="org.easyas3.vinci.display.SpriteSheetBitmapMovie"/>
     <classEntry path="org.easyas3.vinci.display.PixelInteractiveBitmapMovieProxy"/>
     <classEntry path="org.easyas3.vinci.display.BitmapMovie"/>
     <classEntry path="org.easyas3.vinci.display.PixelInteractiveSpriteSheetBitmapMovie"/>
     <classEntry path="org.easyas3.vinci.VinciContext"/>
-    <classEntry path="org.easyas3.vinci.display.IPixelInteractiveBitmap"/>
-    <classEntry path="org.easyas3.vinci.VinciPixelInteractiveContext"/>
+    <classEntry path="org.easyas3.display.pixel.PixelInteractiveSprite"/>
+    <classEntry path="org.easyas3.display.pixel.PixelInteractiveMovieClip"/>
+    <classEntry path="org.easyas3.display.pixel.PixelInteractiveDisplayObjectProxy"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

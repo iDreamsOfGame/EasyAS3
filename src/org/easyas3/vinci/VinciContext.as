@@ -116,9 +116,12 @@ package org.easyas3.vinci
 		 */
 		public function render():void 
 		{
-			for each (var movie:IRenderer in _movies) 
+			var movie:IRenderer;
+			var length:int = _movies.length;
+			
+			for (var i:int = 0; i < length; i++) 
 			{
-				movie.render();
+				(_movies[i] as IRenderer).render();
 			}
 		}
 	}

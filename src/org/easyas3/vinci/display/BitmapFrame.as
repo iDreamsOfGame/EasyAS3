@@ -14,7 +14,7 @@ package org.easyas3.vinci.display
 	 * 位图影片帧信息
 	 * @author Jerry 
 	 */	
-	public class BitmapFrameInfo
+	public class BitmapFrame
 	{
 		/**
 		 * x轴偏移值
@@ -40,7 +40,7 @@ package org.easyas3.vinci.display
 		 * @param	y:Number (default = NaN) — y轴偏移值
 		 * @param	bitmapData:BitmapData (default = null) — 位图数据
 		 */		
-		public function BitmapFrameInfo(x:Number = NaN, y:Number = NaN, bitmapData:BitmapData = null)
+		public function BitmapFrame(x:Number = NaN, y:Number = NaN, bitmapData:BitmapData = null)
 		{
 			_x = x;
 			_y = y;
