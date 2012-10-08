@@ -87,8 +87,8 @@ package org.easyas3.vinci.display
 			_frameRate = frameRate;
 			_centerPointPosition = centerPointPosition;
 			_bitmap = new Bitmap();
-			this.frames = frames;
 			initialize();
+			this.frames = frames;
 			
 			//判断是否独立渲染
 			if (frameRate)

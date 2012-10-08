@@ -34,7 +34,7 @@ package org.easyas3.vinci.display
 		 * @param	direction:String (default = "horizontal") — 精灵序列图布局方向
 		 * @param	centerPointPosition:String (default = "center") — 位图动画中心点位置
 		 */
-		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmap = null, frameRate:Number = NaN, direction = "horizontal", 
+		public function SpriteSheetBitmapMovie(spriteSheetBmpInfo:SpriteSheetBitmap = null, frameRate:Number = NaN, direction:String = "horizontal", 
 											   centerPointPosition:String = "center")
 		{
 			_spriteSheetBmpInfo = spriteSheetBmpInfo;
