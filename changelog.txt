@@ -1,6 +1,6 @@
-﻿[2012.10.11] 0.73.20版
+﻿[2012.10.11] 0.74.20版
 
-Vinci（达芬奇）渲染引擎像素级鼠标交互内存占用优化，同时增加PixelInteractiveSprite和PixelInteractiveMovieClip的Demo例子
+Vinci（达芬奇）渲染引擎像素级鼠标交互内存占用优化，同时增加PixelInteractiveSprite和PixelInteractiveMovieClip的Demo例子，另外增加了SecretInteger内存混淆Demo
 
 =====================================================================================
 
