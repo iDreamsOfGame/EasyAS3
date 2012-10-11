@@ -82,13 +82,13 @@ package org.easyas3.vinci.display
 		 */	
 		public function BitmapMovie(frames:Vector.<BitmapFrame> = null, frameRate:Number = NaN, centerPointPosition:String = "center")
 		{
-			super();
-			
 			_frameRate = frameRate;
 			_centerPointPosition = centerPointPosition;
 			_bitmap = new Bitmap();
 			initialize();
 			this.frames = frames;
+			
+			super(_bitmap);
 			
 			//判断是否独立渲染
 			if (frameRate)

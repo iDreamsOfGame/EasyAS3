@@ -8,6 +8,7 @@
 
 package org.easyas3.display.pixel
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	
 	/**
@@ -24,13 +25,14 @@ package org.easyas3.display.pixel
 		
 		/**
 		 * 构造函数
+		 * @param	bitmapForHitDetection:Bitmap — 探测鼠标鼠标事件用位图对象
 		 */
-		public function PixelInteractiveSprite()
+		public function PixelInteractiveSprite(bitmapForHitDetection:Bitmap = null)
 		{
 			super();
 			
 			//初始化代理对象
-			_pixelInteractiveProxy = new PixelInteractiveDisplayObjectProxy(this);
+			_pixelInteractiveProxy = new PixelInteractiveDisplayObjectProxy(this, bitmapForHitDetection);
 		}
 		
 		/**

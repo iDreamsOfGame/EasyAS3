@@ -91,11 +91,13 @@ package org.easyas3.display.pixel
 		
 		/**
 		 * 构造函数
-		 * @param interactiveObject:InteractiveObject — 交互对象
+		 * @param	interactiveObject:InteractiveObject — 交互对象
+		 * @param	bitmapForHitDetection:Bitmap — 探测鼠标鼠标事件用位图对象
 		 */		
-		public function PixelInteractiveDisplayObjectProxy(interactiveObject:IPixelInteractiveDisplayObject)
+		public function PixelInteractiveDisplayObjectProxy(interactiveObject:IPixelInteractiveDisplayObject, bitmapForHitDetection:Bitmap = null)
 		{
 			_interactiveObject = interactiveObject;
+			_bitmapForHitDetection = bitmapForHitDetection;
 			_mousePoint = new Point();
 			pixelIntactiveEnabled = true;
 		}
@@ -189,15 +191,7 @@ package org.easyas3.display.pixel
 			
 			if (isRedraw)
 			{
-				try
-				{
-					//删除原始位图对象，可能会报错，所以加入容错处理
-					_interactiveObject.removeChild(_bitmapForHitDetection);
-				}
-				catch (e:Error)
-				{
-					//容错处理
-				}
+				removeBitmapForHitDetection();
 			}
 			
 			bounds = _interactiveObject.getBounds(_interactiveObject as DisplayObject);
@@ -243,16 +237,7 @@ package org.easyas3.display.pixel
 			deactiveMouseEventCapture();
 			_interactiveObject.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			
-			try
-			{
-				_interactiveObject.removeChild(_bitmapForHitDetection);
-			}
-			catch (e:Error)
-			{
-				//容错处理
-			}
-			
-			_bitmapForHitDetection = null;
+			removeBitmapForHitDetection();
 			_interactiveObject.originalMouseEnabled = true;
 			_transparentMode = false;
 			setButtonModeCache(true);
@@ -316,6 +301,27 @@ package org.easyas3.display.pixel
 			
 			_buttonModeCache = (_interactiveObject.buttonMode == true ? 1 : 0);
 			_interactiveObject.buttonMode = false;
+		}
+		
+		/**
+		 * 移除探测鼠标鼠标事件用位图对象
+		 * @private 
+		 */		
+		private function removeBitmapForHitDetection():void
+		{
+			try
+			{
+				//删除原始位图对象，可能会报错，所以加入容错处理
+				if(_bitmapForHitDetection.name == "pixelInteractiveHitMap")
+				{
+					_interactiveObject.removeChild(_bitmapForHitDetection);
+					_bitmapForHitDetection = null;
+				}
+			}
+			catch (e:Error)
+			{
+				//容错处理
+			}
 		}
 		
 		/**
