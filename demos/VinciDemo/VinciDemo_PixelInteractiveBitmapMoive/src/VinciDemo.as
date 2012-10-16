@@ -16,9 +16,10 @@ package
 	
 	import org.easyas3.vinci.VinciContext;
 	import org.easyas3.vinci.display.BitmapMovie;
+	import org.easyas3.vinci.display.BitmapMovieCenterPointPosition;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
-	[SWF(width="1300", height="800", frameRate="25")]
+	[SWF(width="1300", height="800", frameRate="24")]
 	public class VinciDemo extends BaseDemo
 	{
 		private var list_mc:Array;
@@ -41,7 +42,7 @@ package
 			while (i < c) 
 			{
 				
-				var mc:BitmapMovie = new BitmapMovie(null, 16);
+				var mc:BitmapMovie = new BitmapMovie(null, 24, BitmapMovieCenterPointPosition.TOP_LEFT);
 				mc.addEventListener(MouseEvent.ROLL_OVER, mcPixelRollOver);
 				mc.addEventListener(MouseEvent.ROLL_OUT, mcPixelRollOut);
 				mc.addEventListener(MouseEvent.CLICK, mcClick);
@@ -109,7 +110,7 @@ package
 			while (i < DemoConfig.ItemTypeNumber)
 			{
 				var mc:MovieClip = getItem(i);
-				BitmapBuffer.storeBitmapFrameInfos(String(i), BitmapBuffer.cacheBitmapMovieClip(mc, true, 0xcccccc));
+				BitmapBuffer.storeBitmapFrameInfos(String(i), BitmapBuffer.cacheBitmapMovieClip(mc, true, 0x000000, 1, true));
 				i++;
 			}
 		}

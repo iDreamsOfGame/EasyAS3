@@ -85,10 +85,11 @@ package org.easyas3.vinci.utils
 		 * @param	transparent:Boolean — 是否透明
 		 * @param	fillColor:uint — 填充颜色
 		 * @param	scale:Number — 缓存成位图之后的缩放值
+		 * @param	findColor:Boolean (default = true) — 如果该值设置为 true，则保留图像中的全部像素。如果该值设置为 false，则裁剪图像，剔除透明像素部分。
 		 * @return BitmapFrameInfo — 缓存成位图的帧信息
 		 */
 		public static function cacheBitmap(source:DisplayObject, transparent:Boolean = true, fillColor:uint = 0x00000000,
-										   scale:Number = 1):BitmapFrame
+										   scale:Number = 1, findColor:Boolean = false):BitmapFrame
 		{
 			var bitmapData:BitmapData;
 			var validRect:Rectangle;
@@ -110,7 +111,7 @@ package org.easyas3.vinci.utils
 			bitmapData.draw(source, new Matrix(scale, 0, 0, scale, -x, -y), null, null, null, true);
 			
 			//剔除边缘空白像素
-			validRect = bitmapData.getColorBoundsRect(0xFF000000, 0x00000000, false);
+			validRect = bitmapData.getColorBoundsRect(0xFF000000, 0x00000000, findColor);
 			
 			if (validRect.isEmpty() == false && (bitmapData.width != validRect.width || bitmapData.height != validRect.height))
 			{
@@ -136,10 +137,11 @@ package org.easyas3.vinci.utils
 		 * @param	transparent:Boolean — 是否透明
 		 * @param	fillColor:uint — 填充颜色
 		 * @param	scale:Number — 缓存成位图之后的缩放值
+		 * @param	findColor:Boolean (default = true) — 如果该值设置为 true，则保留图像中的全部像素。如果该值设置为 false，则裁剪图像，剔除透明像素部分。
 		 * @return Vector.<BitmapFrameInfo> — 缓存成位图的帧信息序列
 		 */
 		public static function cacheBitmapMovieClip(source:DisplayObject, transparent:Boolean = true, 
-													fillColor:uint = 0x00000000, scale:Number = 1):Vector.<BitmapFrame> 
+													fillColor:uint = 0x00000000, scale:Number = 1, findColor:Boolean = false):Vector.<BitmapFrame> 
 		{
 			var mcChildren:Array;
 			var mcNumChildren:int;
@@ -152,7 +154,7 @@ package org.easyas3.vinci.utils
 			{
 				//不是影片剪辑对象
 				bitmapFrameInfos = new Vector.<BitmapFrame>(1, true);
-				bitmapFrameInfos[0] = cacheBitmap(source, transparent, fillColor, scale);
+				bitmapFrameInfos[0] = cacheBitmap(source, transparent, fillColor, scale, findColor);
 			}
 			else
 			{
@@ -163,7 +165,7 @@ package org.easyas3.vinci.utils
 				for (var i:int = 0; i < mcTotalFrames; i++) 
 				{
 					//按照影片剪辑长度播放影片剪辑，同时将各帧影像缓存为位图
-					bitmapFrameInfos[i] = cacheBitmap(mc, transparent, fillColor, scale);
+					bitmapFrameInfos[i] = cacheBitmap(mc, transparent, fillColor, scale, findColor);
 					mcChildren = DisplayObjectUtil.searchChild(mc, MovieClip);
 					mc.nextFrame();
 					
