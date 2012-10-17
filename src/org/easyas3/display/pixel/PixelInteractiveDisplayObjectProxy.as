@@ -161,6 +161,8 @@ package org.easyas3.display.pixel
 			{
 				pixelIntactiveEnabled = false;
 			}
+			
+			_interactiveObject.originalMouseEnabled = value;
 		}
 		
 		/**
