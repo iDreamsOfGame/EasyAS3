@@ -21,12 +21,12 @@ package org.easyas3.vinci.display
 		protected var _name:String;
 		
 		/**
-		 * 行索引范围
+		 * 行索引范围（索引范围为0 ~ (行最大值 - 1)）
 		 */
 		protected var _rowIndexRange:Array;
 		
 		/**
-		 * 列索引范围
+		 * 列索引范围（索引范围为0 ~ (列最大值 - 1)）
 		 */
 		protected var _columnIndexRange:Array;
 		
@@ -56,7 +56,7 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 行索引范围
+		 * 行索引范围（索引范围为0 ~ (行最大值 - 1)）
 		 */
 		public function set rowIndexRange(value:Array):void 
 		{
@@ -67,7 +67,7 @@ package org.easyas3.vinci.display
 		}
 		
 		/**
-		 * 列索引范围
+		 * 列索引范围（索引范围为0 ~ (列最大值 - 1)）
 		 */
 		public function set columnIndexRange(value:Array):void 
 		{

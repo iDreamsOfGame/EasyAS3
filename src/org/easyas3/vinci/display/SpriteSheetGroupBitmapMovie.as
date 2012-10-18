@@ -8,6 +8,7 @@
 
 package org.easyas3.vinci.display 
 {
+	import org.easyas3.utils.MathUtil;
 	import org.easyas3.vinci.utils.BitmapBuffer;
 	
 	/**
@@ -49,18 +50,28 @@ package org.easyas3.vinci.display
 		public function set currentGroup(group:SpriteSheetGoup):void 
 		{
 			var bitmaps:Array = [];
+			var newRowCount:int;
+			var newColumnCount:int;
 			var startRowIndex:int = group.startRowIndex;
 			var endRowIndex:int = group.endRowIndex;
 			var startColumnIndex:int = group.startColumnIndex;
 			var endColumnIndex:int = group.endColumnIndex;
-			var newRowCount:int = endRowIndex - startRowIndex + 1;
-			var newColumnCount:int = endColumnIndex - startColumnIndex + 1;
 			
 			if (_spriteSheetBmpInfo == null)
 			{
 				//如果位图数组为空的话则不继续执行
 				return;
 			}
+			
+			//验证边界值
+			startRowIndex = MathUtil.checkValueFromRange(startRowIndex, 0, row - 1);
+			endRowIndex = MathUtil.checkValueFromRange(endRowIndex, 0, row - 1);
+			startColumnIndex = MathUtil.checkValueFromRange(startColumnIndex, 0, column - 1);
+			endColumnIndex = MathUtil.checkValueFromRange(endColumnIndex, 0, column - 1);
+			
+			//得到新的行数和列数
+			newRowCount = endRowIndex - startRowIndex + 1;
+			newColumnCount = endColumnIndex - startColumnIndex + 1;
 			
 			_currentGroup = group;
 			

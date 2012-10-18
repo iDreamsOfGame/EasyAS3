@@ -1,4 +1,10 @@
-﻿[2012.10.17] 0.74.22版
+﻿[2012.10.18] 0.75.23版
+
+为SpriteSheetGroupBitmapMovie增加行列索引边界值检测，并为MathUtil增加checkValueFromRange方法
+
+=====================================================================================
+
+[2012.10.17] 0.74.22版
 
 修复PixelInteractiveDisplayObjectProxy.as中设置mouseEnabled属性出现的bug
 

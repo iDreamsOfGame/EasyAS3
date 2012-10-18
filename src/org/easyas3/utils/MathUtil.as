@@ -110,6 +110,21 @@ package org.easyas3.utils
 		{
 			return Number(value.toFixed(fractionDigits));
 		}
+		
+		/**
+		 * 在取值范围中验证指定的值，超出范围则赋值为边界值
+		 * @param	value:int (default = 0) — 要验证的值
+		 * @param	min:int (default = 0) — 取值范围最小值
+		 * @param	max:int (default = 0) — 取值范围最大值
+		 * @return	int — 最终验证过的值
+		 */
+		public static function checkValueFromRange(value:int = 0, min:int = 0, max:int = 0):int 
+		{
+			value = Math.max(value, min);
+			value = Math.min(value, max);
+			
+			return value;
+		}
 	}
 
 }
